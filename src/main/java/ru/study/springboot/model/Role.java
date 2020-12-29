@@ -1,5 +1,5 @@
 package ru.study.springboot.model;
 
-public enum UserRole {
+public enum Role {
     USER, ADMIN
 }
