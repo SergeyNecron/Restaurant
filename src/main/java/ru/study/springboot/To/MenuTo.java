@@ -1,11 +1,10 @@
 package ru.study.springboot.To;
 
-import ru.study.springboot.model.Meal;
-
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MenuTo {
     String nameSaloon;
-    List<Meal> meals;
+    Map<String, Double> meals = new HashMap();
     Integer rating;
 }

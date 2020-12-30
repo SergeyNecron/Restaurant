@@ -12,22 +12,22 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
-@Table(name = "menus", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id"}, name = "menus_unique_user_idx")})
+@Table(name = "menus")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true, exclude = {"user"})
 public class Menu extends AbstractBaseEntity{
 
-    public Menu (Integer id, String saloon,  List<Meal> meals) {
+    public Menu (Integer id, String saloon, Map<String, Double> meals) {
         super(id);
         this.saloon = saloon;
         this.meals = meals;
-        this.dateCreateMenu =  LocalDateTime.now().toLocalDate();
+        this.dateCreateMenu = LocalDateTime.now().toLocalDate();
     }
 
     @Column(name = "saloon", nullable = false)
@@ -39,12 +39,13 @@ public class Menu extends AbstractBaseEntity{
     @NotNull
     LocalDate dateCreateMenu;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "menu")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JsonManagedReference
-    @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
-    List<Meal> meals = new ArrayList<>();
+    @CollectionTable(name = "meals", joinColumns = @JoinColumn(name = "id"),
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"id", "meal"}, name = "menu_meals_unique")})
+    @Column(name = "meal")
+    @ElementCollection(fetch = FetchType.EAGER)
+    Map<String, Double> meals = new HashMap();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
     private User user;
