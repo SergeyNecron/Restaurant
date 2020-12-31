@@ -22,11 +22,11 @@ public class User extends AbstractBaseEntity {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique")})
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
-    Set<Role> roles;
+    private Set<Role> roles;
 
     @Column(name = "vail")
     @Range(min = 0, max = 100000)
-    Integer vail;
+    private Integer vail;
 
     @Column(name = "email", nullable = false, unique = true)
     @Email
