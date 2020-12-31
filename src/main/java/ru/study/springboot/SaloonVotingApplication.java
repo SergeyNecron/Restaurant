@@ -25,15 +25,52 @@ public class SaloonVotingApplication implements ApplicationRunner {
     }
     @Override
     public void run(ApplicationArguments args) {
-        Map<String, Double> meals = new HashMap<>();
-        meals.put("Бизнес-ланч", 300.0);
+        Map<String, Double> meals1 = new HashMap<>();
+        Map<String, Double> meals2 = new HashMap<>();
+        Map<String, Double> meals3 = new HashMap<>();
+        Map<String, Double> meals4 = new HashMap<>();
 
-        Menu menu = new Menu(null,"София", meals);
+        meals1.put("Бизнес-ланч",100.0);
+        meals1.put("Тёплые ролы",99.0);
+        meals1.put("Салат Цезарь",99.0);
+        meals1.put("Лимонад",90.0);
+        meals1.put("Пицца",58.9);
+        meals1.put("Мороженное",8.0);
+
+        meals2.put("Суп",50.0);
+        meals2.put("Отбивная",20.0);
+        meals2.put("Картофильное пюре",80.0);
+        meals2.put("Амлет",70.0);
+        meals2.put("Хачапури",50.0);
+        meals2.put("Чай",50.0);
+
+        meals3.put("Ланч",200.0);
+        meals3.put("Ролы", 99.0);
+        meals3.put("Салат фруктовый", 99.0);
+        meals3.put("Кофе",60.0);
+        meals3.put("Бургер", 70.0);
+        meals3.put("Гамбургер", 60.0);
+
+        meals4.put("Салат Цезарь", 80.0);
+        meals4.put("Спагетти с соусом", 50.0);
+        meals4.put("Щи", 40.0);
+        meals4.put("Ножки индейки", 500.0);
+        meals4.put("Горячий шоколад", 80.0);
+        meals4.put("Кофе", 50.5);
+
+        List<Menu> menus = new ArrayList();
+        menus.add(new Menu("София", meals1));
+        menus.add(new Menu( "Макдак", meals2));
+        menus.add(new Menu( "Пицерия", meals3));
+        menus.add(new Menu( "Закусочная", meals4));
+
         User user = new User("admin@ya.ru", "password", Role.ROLE_ADMIN, Role.ROLE_USER);
         user.setVail(20);
-        user.setMenus(Collections.singletonList(menu));
         userRepository.save(user);
-        menu.setUser(user);
-        menuRepository.save(menu);
+
+        menus.stream()
+                .forEach(it->it.setUser(user));
+
+        menuRepository.saveAll(menus);
     }
 }
