@@ -20,7 +20,6 @@ import java.util.Map;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"user"})
 public class Menu extends AbstractBaseEntity{
 
     public Menu (Integer id, String saloon, Map<String, Double> meals) {
@@ -50,8 +49,4 @@ public class Menu extends AbstractBaseEntity{
     @ElementCollection(fetch = FetchType.EAGER)
     Map<String, Double> meals = new HashMap();
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
-    private User user;
 }

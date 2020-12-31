@@ -6,7 +6,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.study.springboot.model.Menu;
 import ru.study.springboot.repository.MenuRepository;
-import ru.study.springboot.repository.UserRepository;
 
 import javax.validation.Valid;
 
@@ -20,21 +19,19 @@ import static ru.study.springboot.util.ValidationUtil.checkNew;
 @AllArgsConstructor
 public class MenuController {
 
-    private final UserRepository userRepository;
     private final MenuRepository menuRepository;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public Menu create(Integer userId, @Valid @RequestBody Menu meal) {
         log.info("create {} for user {}", meal, userId);
         checkNew(meal);
-        meal.setUser(userRepository.getOne(userId));
         return menuRepository.save(meal);
     }
 
     @GetMapping
     public List<Menu> getAll(Integer userId) {
         log.info("getAll for user {}", userId);
-        final List<Menu> all = menuRepository.findAll();
-        return all;
+        final List<Menu> allMenu = menuRepository.findAll();
+        return allMenu;
     }
 }

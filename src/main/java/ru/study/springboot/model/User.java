@@ -1,9 +1,6 @@
 package ru.study.springboot.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -30,11 +27,6 @@ public class User extends AbstractBaseEntity {
     @Column(name = "vail")
     @Range(min = 0, max = 100000)
     Integer vail;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JsonManagedReference
-    @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
-    List<Menu> menus;
 
     @Column(name = "email", nullable = false, unique = true)
     @Email

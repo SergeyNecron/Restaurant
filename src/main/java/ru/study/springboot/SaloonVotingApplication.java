@@ -11,7 +11,10 @@ import ru.study.springboot.model.User;
 import ru.study.springboot.repository.MenuRepository;
 import ru.study.springboot.repository.UserRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @SpringBootApplication
@@ -60,16 +63,13 @@ public class SaloonVotingApplication implements ApplicationRunner {
 
         List<Menu> menus = new ArrayList();
         menus.add(new Menu("София", meals1));
-        menus.add(new Menu( "Макдак", meals2));
-        menus.add(new Menu( "Пицерия", meals3));
-        menus.add(new Menu( "Закусочная", meals4));
+        menus.add(new Menu("Макдак", meals2));
+        menus.add(new Menu("Пицерия", meals3));
+        menus.add(new Menu("Закусочная", meals4));
 
         User user = new User("admin@ya.ru", "password", Role.ROLE_ADMIN, Role.ROLE_USER);
         user.setVail(20);
         userRepository.save(user);
-
-        menus.stream()
-                .forEach(it->it.setUser(user));
 
         menuRepository.saveAll(menus);
     }
