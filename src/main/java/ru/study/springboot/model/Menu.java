@@ -48,5 +48,4 @@ public class Menu extends AbstractBaseEntity{
     @Column(name = "meal")
     @ElementCollection(fetch = FetchType.EAGER)
     Map<String, Double> meals = new HashMap();
-
 }

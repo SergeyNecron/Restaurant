@@ -42,7 +42,7 @@ public class SaloonVotingApplication implements ApplicationRunner {
 
         meals2.put("Суп",50.0);
         meals2.put("Отбивная",20.0);
-        meals2.put("Картофильное пюре",80.0);
+        meals2.put("Картофельное пюре",80.0);
         meals2.put("Амлет",70.0);
         meals2.put("Хачапури",50.0);
         meals2.put("Чай",50.0);
@@ -67,9 +67,12 @@ public class SaloonVotingApplication implements ApplicationRunner {
         menus.add(new Menu("Пицерия", meals3));
         menus.add(new Menu("Закусочная", meals4));
 
-        User user = new User("admin@ya.ru", "password", Role.ROLE_ADMIN, Role.ROLE_USER);
-        user.setVail(20);
+        User user = new User("user@ya.ru", "password", Role.ROLE_USER);
+        User admin= new User("admin@ya.ru", "password", Role.ROLE_ADMIN, Role.ROLE_USER);
+        user.setVail(4);
+        admin.setVail(4);
         userRepository.save(user);
+        userRepository.save(admin);
 
         menuRepository.saveAll(menus);
     }
