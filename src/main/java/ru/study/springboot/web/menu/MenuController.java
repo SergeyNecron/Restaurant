@@ -15,10 +15,12 @@ import ru.study.springboot.util.Util;
 import javax.validation.Valid;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ru.study.springboot.util.Util.isBetweenHalfOpen;
 import static ru.study.springboot.util.ValidationUtil.checkNew;
 
 @RestController
@@ -29,6 +31,8 @@ public class MenuController {
     private final MenuRepository menuRepository;
     private final UserRepository userRepository;
     static final Integer MAX_COUNT_MENU = 6;
+    static final LocalTime startTime = LocalTime.of(0,0);
+    static final LocalTime endTime = LocalTime.of(11,0);
 
     @PostMapping(value = "/create",consumes = MediaType.APPLICATION_JSON_VALUE)
     public Menu create(@Valid @RequestBody Menu menu) {
@@ -36,8 +40,9 @@ public class MenuController {
         checkNew(menu);
         menu.setDateCreateMenu(LocalDate.now());
         Integer countMenu = menuRepository.countByDate(LocalDate.now());
-       if(countMenu<MAX_COUNT_MENU) return menuRepository.save(menu);
-       else throw new IllegalRequestDataException("Max count menu = " + MAX_COUNT_MENU);
+       if(countMenu>MAX_COUNT_MENU) throw new
+               IllegalRequestDataException("Max count menu = " + MAX_COUNT_MENU);
+       return menuRepository.save(menu);
     }
 
     @GetMapping
@@ -50,9 +55,20 @@ public class MenuController {
     @GetMapping("/voting")
     public User voting(Integer userId, Integer menuId) {
         log.info("voting user {}", userId);
-        User user =  userRepository.findById(userId).orElseThrow();
+        if(!menuRepository.existsById(menuId))
+            throw new IllegalRequestDataException("Menu №" + menuId + " not found");
+        User user = getUserById(userId);
+        if  (!isBetweenHalfOpen(LocalTime.now(), startTime, endTime) && (user.getVail() != null))
+            throw new IllegalRequestDataException("you cannot re-vote after: " + endTime);
         user.setVail(menuId);
         return userRepository.save(user);
+    }
+
+    private User getUserById(Integer userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) throw new
+                IllegalRequestDataException("User with id = " + MAX_COUNT_MENU + " not found");
+        return userOptional.get();
     }
 
     private MenuTo getTo(Menu menu) {
