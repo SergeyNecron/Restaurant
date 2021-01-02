@@ -1,5 +1,6 @@
 package ru.study.springboot.web.menu;
 
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -27,6 +28,7 @@ import static ru.study.springboot.util.ValidationUtil.checkNew;
 @RequestMapping(value = "/menu", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
+@Api(tags="Menu Controller")
 public class MenuController {
     private final MenuRepository menuRepository;
     private final UserRepository userRepository;

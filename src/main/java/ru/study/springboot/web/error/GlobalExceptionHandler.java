@@ -1,4 +1,4 @@
-package ru.study.springboot.web;
+package ru.study.springboot.web.error;
 
 import lombok.AllArgsConstructor;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
