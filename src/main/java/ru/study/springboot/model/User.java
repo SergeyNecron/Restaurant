@@ -5,13 +5,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.util.StringUtils;
+import ru.study.springboot.HasIdAndEmail;
 import ru.study.springboot.util.JsonDeserializers;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -22,7 +22,7 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString(callSuper = true, exclude = {"password"})
-public class User extends AbstractBaseEntity implements Serializable {
+public class User extends AbstractBaseEntity implements HasIdAndEmail {
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique")})
@@ -39,14 +39,6 @@ public class User extends AbstractBaseEntity implements Serializable {
     @NotEmpty
     @Size(max = 128)
     private String email;
-
-    @Column(name = "first_name")
-    @Size(max = 128)
-    private String firstName;
-
-    @Column(name = "last_name")
-    @Size(max = 128)
-    private String lastName;
 
     @Column(name = "password")
     @Size(max = 256)

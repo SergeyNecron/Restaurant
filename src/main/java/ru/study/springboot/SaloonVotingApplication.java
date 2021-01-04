@@ -67,8 +67,8 @@ public class SaloonVotingApplication implements ApplicationRunner {
         menus.add(new Menu("Пицерия", meals3));
         menus.add(new Menu("Закусочная", meals4));
 
-        User user = new User("user@ya.ru", "password", Role.USER);
-        User admin= new User("admin@ya.ru", "password", Role.ADMIN, Role.USER);
+        User user = new User("user@ya.ru", "{noop}password", Role.USER);
+        User admin= new User("admin@ya.ru", "{noop}password", Role.ADMIN, Role.USER);
         user.setVail(4);
         admin.setVail(4);
         userRepository.save(user);

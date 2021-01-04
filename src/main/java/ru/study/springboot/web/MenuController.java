@@ -1,10 +1,13 @@
-package ru.study.springboot.web.menu;
+package ru.study.springboot.web;
 
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import ru.study.springboot.AuthUser;
 import ru.study.springboot.error.IllegalRequestDataException;
 import ru.study.springboot.model.User;
 import ru.study.springboot.repository.UserRepository;
@@ -12,9 +15,7 @@ import ru.study.springboot.to.MenuTo;
 import ru.study.springboot.model.Menu;
 import ru.study.springboot.repository.MenuRepository;
 import ru.study.springboot.util.Util;
-
 import javax.validation.Valid;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -25,18 +26,21 @@ import static ru.study.springboot.util.Util.isBetweenHalfOpen;
 import static ru.study.springboot.util.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(value = "/menu", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = MenuController.REST_URL_MENU)
 @Slf4j
 @AllArgsConstructor
 @Api(tags="Menu Controller")
 public class MenuController {
+    static final String REST_URL_MENU = "/api/menu";
     private final MenuRepository menuRepository;
     private final UserRepository userRepository;
+
     static final Integer MAX_COUNT_MENU = 6;
     static final LocalTime startTime = LocalTime.of(0,0);
     static final LocalTime endTime = LocalTime.of(11,0);
 
     @PostMapping(value = "/create",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.CREATED)
     public Menu create(@Valid @RequestBody Menu menu) {
         log.info("create menu{}", menu);
         checkNew(menu);
@@ -47,7 +51,7 @@ public class MenuController {
        return menuRepository.save(menu);
     }
 
-    @GetMapping
+    @GetMapping("/get")
     public List<MenuTo> getAll() {
         log.info("getAll menus");
         final List<Menu> allMenu = menuRepository.findAllByDate(LocalDate.now());
@@ -55,11 +59,11 @@ public class MenuController {
     }
 
     @GetMapping("/voting")
-    public User voting(Integer userId, Integer menuId) {
-        log.info("voting user {}", userId);
+    public User voting(@AuthenticationPrincipal AuthUser authUser, Integer menuId) {
+        log.info("voting user {}", authUser.id());
         if(!menuRepository.existsById(menuId))
             throw new IllegalRequestDataException("Menu №" + menuId + " not found");
-        User user = getUserById(userId);
+        User user = getUserById(authUser.id());
         if  (!isBetweenHalfOpen(LocalTime.now(), startTime, endTime) && (user.getVail() != null))
             throw new IllegalRequestDataException("you cannot re-vote after: " + endTime);
         user.setVail(menuId);

@@ -11,13 +11,6 @@ import java.sql.SQLException;
 @Slf4j
 public class AppConfig {
 
-/*
-    @Bean(initMethod = "start", destroyMethod = "stop")
-    public Server h2WebServer() throws SQLException {
-        return Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082");
-    }
-*/
-
     @Bean(initMethod = "start", destroyMethod = "stop")
     public Server h2Server() throws SQLException {
         log.info("Start H2 TCP server");
