@@ -7,6 +7,7 @@ import ru.study.springboot.model.Menu;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface MenuRepository extends JpaRepository<Menu, Integer> {
@@ -16,4 +17,6 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
 
     @Query("SELECT m FROM Menu m WHERE m.dateCreateMenu=:date")
     List<Menu> findAllByDate(LocalDate date);
+
+    Optional<Menu> getBySaloon(String saloon);
 }

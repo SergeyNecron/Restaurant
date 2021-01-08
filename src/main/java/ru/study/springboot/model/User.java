@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.util.StringUtils;
-import ru.study.springboot.HasIdAndEmail;
 import ru.study.springboot.util.JsonDeserializers;
 
 import javax.persistence.*;
@@ -13,6 +12,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -22,13 +22,28 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString(callSuper = true, exclude = {"password"})
-public class User extends AbstractBaseEntity implements HasIdAndEmail {
+public class User extends AbstractBaseEntity {
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique")})
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return getRoles().equals(user.getRoles()) &&
+                Objects.equals(getVail(), user.getVail()) &&
+                getEmail().equals(user.getEmail());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRoles(), getVail(), getEmail(), getPassword());
+    }
 
     @Column(name = "vail")
     @Range(min = 0, max = 100000)
@@ -50,6 +65,13 @@ public class User extends AbstractBaseEntity implements HasIdAndEmail {
         this.email = StringUtils.hasText(email) ? email.toLowerCase() : null;
     }
     public User(String email, String password, Role role, Role... roles) {
+        this.email = email;
+        this.password = password;
+        this.roles = EnumSet.of(role, roles);
+    }
+
+    public User(Integer id, String email, String password, Role role, Role... roles) {
+        super(id);
         this.email = email;
         this.password = password;
         this.roles = EnumSet.of(role, roles);

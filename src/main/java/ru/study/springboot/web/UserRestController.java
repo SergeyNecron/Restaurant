@@ -3,7 +3,6 @@ package ru.study.springboot.web;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +17,15 @@ import ru.study.springboot.util.ValidationUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping(value = UserController.REST_URL_USER, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = UserRestController.REST_URL_USER, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 @Slf4j
 @Api(tags="User Controller")
-public class UserController {
+public class UserRestController {
 
     static final String REST_URL_USER = "/api/account";
     private final UserRepository userRepository;
@@ -37,7 +37,7 @@ public class UserController {
         userRepository.deleteById(authUser.id());
     }
 
-    @PostMapping(value = "/register", consumes = MediaTypes.HAL_JSON_VALUE)
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<User> register(@Valid @RequestBody User user) {
         log.info("register {}", user);
@@ -61,5 +61,11 @@ public class UserController {
             user.setPassword(oldUser.getPassword());
         }
         userRepository.save(user);
+    }
+
+    @GetMapping
+    public List<User> getAll() {
+        log.info("getAll");
+        return userRepository.findAll();
     }
 }
