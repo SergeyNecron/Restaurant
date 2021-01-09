@@ -75,7 +75,7 @@ public class MenuRestController {
     }
 
     private void checkReVote(LocalTime timeReVote, User user) {
-        if  (!isBetweenHalfOpen(timeReVote, startTime, endTime) && (user.getVail() != null))
+        if  (!isBetweenHalfOpen(timeReVote, startTime, endTime) && (user.getVail() != null) && (user.getVail() != 0))
             throw new IllegalRequestDataException("you cannot re-vote after: " + endTime);
     }
 
