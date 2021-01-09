@@ -1,5 +1,6 @@
 # Saloon Voting
 Graduate project (Выпускной проект Java Enterprise)
+http://localhost:8080/swagger-ui/
 
 Создайте и внедрите REST API, используя Hibernate / Spring / SpringMVC (или Spring-Boot) **без интерфейса**.
  
