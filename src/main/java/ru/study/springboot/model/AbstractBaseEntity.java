@@ -2,6 +2,7 @@ package ru.study.springboot.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.util.ProxyUtils;
 import org.springframework.util.Assert;
 
@@ -15,9 +16,10 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public abstract class AbstractBaseEntity {
+public abstract class AbstractBaseEntity implements Persistable<Integer> {
 
     @Id
+    //  https://coderoad.ru/10041938/
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer id;
 
@@ -28,11 +30,12 @@ public abstract class AbstractBaseEntity {
     }
 
     @JsonIgnore
+    @Override
     public boolean isNew() {
         return id == null;
     }
 
-    //    https://stackoverflow.com/questions/1638723
+    //  https://stackoverflow.com/questions/1638723
     @Override
     public boolean equals(Object o) {
         if (this == o) {

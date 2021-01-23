@@ -1,9 +1,11 @@
 package ru.study.springboot.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
-import org.hibernate.validator.constraints.Range;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.util.StringUtils;
 import ru.study.springboot.util.JsonDeserializers;
 
@@ -12,6 +14,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -36,18 +39,14 @@ public class User extends AbstractBaseEntity {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return getRoles().equals(user.getRoles()) &&
-                Objects.equals(getVail(), user.getVail()) &&
                 getEmail().equals(user.getEmail());
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getRoles(), getVail(), getEmail(), getPassword());
-    }
-
-    @Column(name = "vail")
-    @Range(min = 0, max = 100000)
-    private Integer vail;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OrderBy("date DESC")
+    @JsonManagedReference
+    @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
+    private List<Vote> votes;
 
     @Column(name = "email", nullable = false, unique = true)
     @Email
@@ -64,6 +63,7 @@ public class User extends AbstractBaseEntity {
     public void setEmail(String email) {
         this.email = StringUtils.hasText(email) ? email.toLowerCase() : null;
     }
+
     public User(String email, String password, Role role, Role... roles) {
         this.email = email;
         this.password = password;
@@ -77,4 +77,8 @@ public class User extends AbstractBaseEntity {
         this.roles = EnumSet.of(role, roles);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRoles(), getEmail(), getPassword());
+    }
 }

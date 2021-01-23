@@ -1,16 +1,16 @@
 package ru.study.springboot.util;
 
-import org.springframework.lang.Nullable;
-import ru.study.springboot.to.MenuRating;
-
 import ru.study.springboot.model.Menu;
+import ru.study.springboot.to.MenuTo;
 
 public class MenuUtil {
-    public static MenuRating to(Menu menu, Integer rating) {
-        return new MenuRating(menu.getSaloon(), menu.getMeals(), rating);
+    public static MenuTo to(Menu menu, Integer rating) {
+        return new MenuTo(menu.getSaloon(), menu.getMeals(), rating);
     }
 
-    public static <T extends Comparable<T>> boolean isBetweenHalfOpen(T value, @Nullable T start, @Nullable T end) {
-        return (start == null || value.compareTo(start) >= 0) && (end == null || value.compareTo(end) < 0);
+    public static Menu toMenu(MenuTo menuTo) {
+        return new Menu(menuTo.getNameSaloon(), menuTo.getMeals());
     }
+
+
 }

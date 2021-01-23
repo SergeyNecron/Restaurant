@@ -16,25 +16,26 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
-import ru.study.springboot.TestData;
+import ru.study.springboot.StartData;
 import ru.study.springboot.model.Menu;
 import ru.study.springboot.model.Role;
 import ru.study.springboot.model.User;
 import ru.study.springboot.repository.MenuRepository;
-import ru.study.springboot.repository.UserRepository;
-import ru.study.springboot.to.MenuRating;
+import ru.study.springboot.repository.VoteRepository;
+import ru.study.springboot.to.MenuTo;
+import ru.study.springboot.to.VoteTo;
 import ru.study.springboot.util.JsonUtil;
 import ru.study.springboot.util.MenuUtil;
-import ru.study.springboot.util.ValidationUtil;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.study.springboot.util.MenuUtil.isBetweenHalfOpen;
+import static ru.study.springboot.util.DateTimeUtil.isBetweenHalfOpen;
 import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithName;
 import static ru.study.springboot.web.MenuRestController.*;
 
@@ -44,6 +45,9 @@ import static ru.study.springboot.web.MenuRestController.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 class MenuControllerTest {
+    private static final User user = new User(1, "user@ya.ru", "user", Role.USER);
+    private static final User admin = new User(2, "admin@ya.ru", "admin", Role.USER, Role.ADMIN);
+    private static final User userNotRegistration = new User(3, "user2@ya.ru", "user2", Role.USER);
 
     @Autowired
     private MockMvc mockMvc;
@@ -52,137 +56,158 @@ class MenuControllerTest {
     private MenuRepository menuRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private VoteRepository votingRepository;
 
-    protected ResultActions perform(MockHttpServletRequestBuilder builder) throws Exception {
-        return mockMvc.perform(builder);
+    public static List<MenuTo> getTestMenusTo() {
+        return StartData.getTestMenus()
+                .stream()
+                .map(it -> MenuUtil.to(it, 0))
+                .collect(Collectors.toList());
     }
 
-    public static final User user = new User(1, "user@ya.ru", "user", Role.USER);
-    public static final User admin = new User(2, "admin@ya.ru", "admin", Role.USER, Role.ADMIN);
+    private static MenuTo getMenuTo(String name) {
+        Menu menu = StartData.getTestMenus().get(0);
+        return new MenuTo(name, menu.getMeals(), 0);
+    }
+
+    private static RequestPostProcessor userHttpBasic(User user) {
+        return SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword());
+    }
 
     @BeforeEach
     public void clear() {
         menuRepository.deleteAll();
-        menuRepository.saveAll(TestData.getTestMenus());
-    }
-
-    @Test
-    void getUnauthorizedGet() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_MENU + GET_MENU))
-                .andExpect(status().isUnauthorized());
-    }
-    @Test
-    void getUnauthorizedVoting() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_MENU + "/2"))
-                .andExpect(status().isUnauthorized());
-    }
-    @Test
-    void getUnauthorizedCrete() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL_MENU + CREATE))
-                .andExpect(status().isUnauthorized());
+        votingRepository.deleteAll();
+        menuRepository.saveAll(StartData.getTestMenus());
     }
 
     @Test
     void checkMenuForUser() throws Exception {
         checkMenu(user);
     }
+
     @Test
     void checkMenuForAdmin() throws Exception {
         checkMenu(admin);
     }
-    private void checkMenu(User user) throws Exception {
-        MvcResult action = getMvcResult(user, GET_MENU);
-        List<MenuRating> menusActual = TestUtil.readListFromJsonMvcResult(action, MenuRating.class);
-        List<MenuRating> menus = TestData.getTestMenusTo();
-        assertEquals(menus, menusActual);
-    }
-    private MvcResult getMvcResult(User user, String url) throws Exception {
-        return  perform(MockMvcRequestBuilders.get(REST_URL_MENU + url)
-                .with(userHttpBasic(user)))
-                .andDo(print())
-                .andExpect(status().isOk()).andReturn();
-    }
+
     @Test
-    void checkReVoteForUser() throws Exception {
-        String saloon = "Пицерия";
-        getMvcResultPut(user, saloon);
-        ResultActions action = getMvcResultPut(user, saloon);
-        LocalTime checkTime = LocalTime.now();
-        if(isBetweenHalfOpen(checkTime, startTime, endTime))
-            action.andExpect(status().isOk());
-        else action.andExpect(status().isUnprocessableEntity());
-        User oldUser = checkNotFoundWithName(userRepository.getByEmail(user.getEmail()), user.getEmail());
-        oldUser.setVail(null);
-        userRepository.save(oldUser);
+    void checkUnauthorizedGet() throws Exception {
+        getMvcResultForRequestGet(userNotRegistration, GET_MENU)
+                .andExpect(status().isUnauthorized());
     }
+
     @Test
     void checkVotingForUser() throws Exception {
         checkVoting(user);
     }
+
     @Test
     void checkVotingForAdmin() throws Exception {
         checkVoting(admin);
     }
-    private void checkVoting(User user) throws Exception {
-        String saloon = "София";
-        ResultActions action = getMvcResultPut(user, saloon );
-        action.andExpect(status().isOk());
-        User updateUser = TestUtil.readFromJson(action, User.class);
-        Menu menu = checkNotFoundWithName(menuRepository.getBySaloon(saloon),saloon);
-        user.setVail(menu.id());
-        assertEquals(user, updateUser);
+
+    @Test
+    void checkUnauthorizedVoting() throws Exception {
+        getMvcResultForRequestGet(userNotRegistration, "/2")
+                .andExpect(status().isUnauthorized());
     }
-    private ResultActions getMvcResultPut(User user, String url) throws Exception {
-        return  perform(MockMvcRequestBuilders.put(REST_URL_MENU + url)
-                .with(userHttpBasic(user)))
-                .andDo(print());
+
+    @Test
+    void checkUnauthorizedCrete() throws Exception {
+        getMvcResultForRequestGet(userNotRegistration, CREATE)
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void checkReVoteForUser() throws Exception {
+        String saloon = "Пицерия";
+        getMvcResultForRequestPut(user, saloon);
+        ResultActions action = getMvcResultForRequestPut(user, saloon);
+        LocalTime checkTime = LocalTime.now();
+        if (isBetweenHalfOpen(checkTime, startTime, endTime)) {
+            action.andExpect(status().isOk());
+            equalsVoting(saloon, action, user);
+        } else action.andExpect(status().isUnprocessableEntity());
     }
 
     @Test
     void checkCreateMenuForUserFailed() throws Exception {
-        Menu menu = TestData.getTestMenus().get(0);
-        menu.setSaloon("newMenu");
+        MenuTo menu = getMenuTo("newMenu");
         ResultActions action = getMvcResultPost(user, menu, CREATE);
         action.andExpect(status().isForbidden());
     }
+
     @Test
     void checkCreateMenuForAdminOk() throws Exception {
-        Menu menu = TestData.getTestMenus().get(0);
-        menu.setSaloon("newMenu");
+        MenuTo menu = getMenuTo("newMenu");
         ResultActions action = getMvcResultPost(admin, menu, CREATE);
         action.andExpect(status().isCreated());
-        MenuRating actualMenu = TestUtil.readFromJson(action, MenuRating.class);
-        assertEquals(MenuUtil.to(menu,0), actualMenu);
+        MenuTo actualMenu = TestUtil.readFromJson(action, MenuTo.class);
+        assertEquals(menu, actualMenu);
     }
+
     @Test
     void checkMaxCountMenuCreateForUser() throws Exception {
-        Menu menu = TestData.getTestMenus().get(0);
-        menu.setSaloon("newMenu");
+        MenuTo menu = getMenuTo("newMenu");
         Integer countMenu = menuRepository.countByDate(LocalDate.now());
         ResultActions action = getMvcResultPost(admin, menu, CREATE);
         for (int i = countMenu; i <= MAX_COUNT_MENU; i++) {
-            menu.setSaloon("newMenu"+i);
+            getMenuTo("newMenu" + i);
             action = getMvcResultPost(admin, menu, CREATE);
         }
         action.andExpect(status().isUnprocessableEntity());
     }
+
     @Test
     void checkDuplicateCreateForUser() throws Exception {
-        Menu menu = TestData.getTestMenus().get(0);
-        menu.setSaloon("София");
-        ResultActions action =  getMvcResultPost(admin, menu, CREATE);
+        MenuTo menu = getMenuTo("София");
+        ResultActions action = getMvcResultPost(admin, menu, CREATE);
         action.andExpect(status().isUnprocessableEntity());
     }
-    private ResultActions getMvcResultPost(User user,  Menu menu, String url) throws Exception {
-        return  perform(MockMvcRequestBuilders.post(REST_URL_MENU + url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(menu))
-                .with(userHttpBasic(user)))
-                .andDo(print());
+
+    private void equalsVoting(String saloon, ResultActions action, User user) throws java.io.UnsupportedEncodingException {
+        VoteTo newVoting = TestUtil.readFromJson(action, VoteTo.class);
+        Menu menu = checkNotFoundWithName(menuRepository.getBySaloon(saloon), saloon);
+        assertEquals(new VoteTo(LocalDate.now(), user.getId(), menu.getSaloon()), newVoting);
     }
 
-    public static RequestPostProcessor userHttpBasic(User user) {
-        return SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword());
+    private void checkMenu(User user) throws Exception {
+        MvcResult action = getMvcResultForRequestGet(user, GET_MENU)
+                .andExpect(status().isOk())
+                .andReturn();
+        List<MenuTo> menusActual = TestUtil.readListFromJsonMvcResult(action, MenuTo.class);
+        assertEquals(getTestMenusTo(), menusActual);
+    }
+
+    private void checkVoting(User user) throws Exception {
+        String saloon = "София";
+        ResultActions action = getMvcResultForRequestPut(user, saloon);
+        action.andExpect(status().isOk());
+        equalsVoting(saloon, action, user);
+    }
+
+    private ResultActions perform(MockHttpServletRequestBuilder builder) throws Exception {
+        return mockMvc.perform(builder);
+    }
+
+    private ResultActions getMvcResultForRequestGet(User user, String url) throws Exception {
+        return getMvcResult(user, GET_MENU, MockMvcRequestBuilders.get(REST_URL_MENU + url));
+    }
+
+    private ResultActions getMvcResultForRequestPut(User user, String url) throws Exception {
+        return getMvcResult(user, GET_MENU, MockMvcRequestBuilders.put(REST_URL_MENU + url));
+    }
+
+    private ResultActions getMvcResultPost(User user, MenuTo menu, String url) throws Exception {
+        return getMvcResult(user, GET_MENU, MockMvcRequestBuilders.post(REST_URL_MENU + url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(menu)));
+    }
+
+    private ResultActions getMvcResult(User user, String url, MockHttpServletRequestBuilder mockHttpServletRequestBuilder) throws Exception {
+        return perform(mockHttpServletRequestBuilder
+                .with(userHttpBasic(user)))
+                .andDo(print());
     }
 }

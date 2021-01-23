@@ -9,11 +9,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ru.study.springboot</groupId>
-    <artifactId>saloon-voting</artifactId>
+    <artifactId>Restaurant</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
 
-    <name>saloon-voting</name>
+    <name>saloon-votes</name>
     <description>Spring Boot 2.4</description>
 
     <properties>

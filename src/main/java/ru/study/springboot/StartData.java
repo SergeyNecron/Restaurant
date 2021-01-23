@@ -1,16 +1,13 @@
 package ru.study.springboot;
 
 import ru.study.springboot.model.Menu;
-import ru.study.springboot.to.MenuRating;
-import ru.study.springboot.util.MenuUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-public class TestData {
+public class StartData {
 
     public static List<Menu> getTestMenus() {
         Map<String, Double> meals1 = new HashMap<>();
@@ -18,9 +15,9 @@ public class TestData {
         Map<String, Double> meals3 = new HashMap<>();
         Map<String, Double> meals4 = new HashMap<>();
 
-        meals1.put("Бизнес-ланч",100.0);
-        meals1.put("Тёплые ролы",99.0);
-        meals1.put("Салат Цезарь",99.0);
+        meals1.put("Бизнес-ланч", 100.0);
+        meals1.put("Тёплые ролы", 99.0);
+        meals1.put("Салат Цезарь", 99.0);
         meals1.put("Лимонад",90.0);
         meals1.put("Пицца",58.9);
         meals1.put("Мороженное",8.0);
@@ -53,11 +50,5 @@ public class TestData {
         menus.add(new Menu("Закусочная", meals4));
 
         return menus;
-    }
-    public static List<MenuRating> getTestMenusTo() {
-       return getTestMenus()
-                .stream()
-                .map(it-> MenuUtil.to(it,0))
-                .collect(Collectors.toList());
     }
 }
