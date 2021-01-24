@@ -23,11 +23,6 @@ import java.util.Map;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Menu extends AbstractBaseEntity{
 
-    public Menu (String saloon, Map<String, Double> meals) {
-        this.saloon = saloon;
-        this.meals = meals;
-    }
-
     @Column(name = "saloon", nullable = false)
     @NotBlank
     @Size(min = 2, max = 120)
@@ -43,6 +38,11 @@ public class Menu extends AbstractBaseEntity{
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "menu")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonManagedReference
-    @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Vote> votes;
+
+    public Menu(String saloon, Map<String, Double> meals) {
+        this.saloon = saloon;
+        this.meals = meals;
+    }
 }

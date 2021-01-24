@@ -27,27 +27,6 @@ import java.util.Set;
 @ToString(callSuper = true, exclude = {"password"})
 public class User extends AbstractBaseEntity {
 
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique")})
-    @Column(name = "role")
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Role> roles;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return getRoles().equals(user.getRoles()) &&
-                getEmail().equals(user.getEmail());
-    }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    @OrderBy("date DESC")
-    @JsonManagedReference
-    @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
-    private List<Vote> votes;
-
     @Column(name = "email", nullable = false, unique = true)
     @Email
     @NotEmpty
@@ -60,9 +39,17 @@ public class User extends AbstractBaseEntity {
     @JsonDeserialize(using = JsonDeserializers.PasswordDeserializer.class)
     private String password;
 
-    public void setEmail(String email) {
-        this.email = StringUtils.hasText(email) ? email.toLowerCase() : null;
-    }
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique")})
+    @Column(name = "role")
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Role> roles;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OrderBy("date DESC")
+    @JsonManagedReference
+    @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
+    private List<Vote> votes;
 
     public User(String email, String password, Role role, Role... roles) {
         this.email = email;
@@ -77,8 +64,21 @@ public class User extends AbstractBaseEntity {
         this.roles = EnumSet.of(role, roles);
     }
 
+    public void setEmail(String email) {
+        this.email = StringUtils.hasText(email) ? email.toLowerCase() : null;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(getRoles(), getEmail(), getPassword());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return getRoles().equals(user.getRoles()) &&
+                getEmail().equals(user.getEmail());
     }
 }

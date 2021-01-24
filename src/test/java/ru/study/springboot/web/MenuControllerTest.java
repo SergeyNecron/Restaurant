@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.study.springboot.util.DateTimeUtil.isBetweenHalfOpen;
 import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithName;
 import static ru.study.springboot.web.MenuRestController.*;
 
@@ -125,10 +124,12 @@ class MenuControllerTest {
         getMvcResultForRequestPut(user, saloon);
         ResultActions action = getMvcResultForRequestPut(user, saloon);
         LocalTime checkTime = LocalTime.now();
-        if (isBetweenHalfOpen(checkTime, startTime, endTime)) {
+        if (checkTime.isAfter(endTime))
+            action.andExpect(status().isUnprocessableEntity());
+        else {
             action.andExpect(status().isOk());
             equalsVoting(saloon, action, user);
-        } else action.andExpect(status().isUnprocessableEntity());
+        }
     }
 
     @Test

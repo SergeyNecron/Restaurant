@@ -13,7 +13,7 @@
     <version>1.0</version>
     <packaging>war</packaging>
 
-    <name>saloon-votes</name>
+    <name>Restaurant</name>
     <description>Spring Boot 2.4</description>
 
     <properties>

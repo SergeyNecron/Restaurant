@@ -11,11 +11,11 @@ import static ru.study.springboot.StartData.getTestMenus;
 
 @SpringBootApplication
 @AllArgsConstructor
-public class SaloonVotingApplication implements ApplicationRunner {
+public class RestaurantApplication implements ApplicationRunner {
     private final MenuRepository menuRepository;
 
     public static void main(String[] args) {
-        SpringApplication.run(SaloonVotingApplication.class, args);
+        SpringApplication.run(RestaurantApplication.class, args);
     }
 
     @Override

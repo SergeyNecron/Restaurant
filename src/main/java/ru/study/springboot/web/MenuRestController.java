@@ -26,7 +26,6 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.study.springboot.util.DateTimeUtil.isBetweenHalfOpen;
 import static ru.study.springboot.util.ValidationUtil.*;
 
 @RestController
@@ -43,7 +42,6 @@ public class MenuRestController {
     private final VoteRepository votingRepository;
 
     static final Integer MAX_COUNT_MENU = 5;
-    static final LocalTime startTime = LocalTime.of(0,0);
     static final LocalTime endTime = LocalTime.of(11,0);
 
     @PostMapping(value = CREATE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -79,7 +77,7 @@ public class MenuRestController {
     }
 
     private void checkReVote(LocalDateTime timeReVote, User user) {
-        if (!isBetweenHalfOpen(timeReVote.toLocalTime(), startTime, endTime)
+        if (timeReVote.toLocalTime().isAfter(endTime)
                 && (votingRepository.existsByDateAndUser(timeReVote.toLocalDate(), user))
         )
             throw new IllegalRequestDataException("you cannot re-vote after: " + endTime);
