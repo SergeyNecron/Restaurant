@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-@Table(name = "votes")
+@Table(name = "vote")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,15 +22,15 @@ public class Vote extends AbstractBaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "user-vote")
     @NotNull
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_id", nullable = false)
-    @JsonBackReference
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    @JsonBackReference(value = "restaurant-vote")
     @NotNull
-    private Menu menu;
+    private Restaurant restaurant;
 
     @Override
     public boolean equals(Object o) {
@@ -38,12 +38,13 @@ public class Vote extends AbstractBaseEntity {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Vote votes = (Vote) o;
-        return Objects.equals(getDate(), votes.getDate()) && Objects.equals(getUser(), votes.getUser()) && Objects.equals(getMenu(), votes.getMenu());
+        return Objects.equals(getDate(), votes.getDate()) && Objects.equals(getUser().getId(), votes.getUser().getId())
+                && Objects.equals(getRestaurant().getId(), votes.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getDate(), getUser(), getMenu());
+        return Objects.hash(super.hashCode(), getDate(), getUser(), getRestaurant());
     }
 
     @Override
@@ -52,7 +53,7 @@ public class Vote extends AbstractBaseEntity {
                 "id=" + id +
                 ", date=" + date +
                 ", user=" + user.id +
-                ", menu=" + menu.id +
+                ", menu=" + restaurant.id +
                 '}';
     }
 }

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public interface VoteRepository extends JpaRepository<Vote, Integer> {
     boolean existsByDateAndUser(LocalDate date, User user);
 
-    @Query("SELECT count (v) FROM Vote v WHERE v.menu.id=:menuId and v.date=:date")
-    Integer getVotingMenuByDate(int menuId, LocalDate date);
+    @Query("SELECT count (v) FROM Vote v WHERE v.restaurant.id=:restaurantId and v.date=:date")
+    Integer getCountVoteByDateForRestaurant(int restaurantId, LocalDate date);
 
 }

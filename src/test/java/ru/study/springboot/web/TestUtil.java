@@ -4,11 +4,13 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
-import  ru.study.springboot.model.User;
-import  ru.study.springboot.util.JsonUtil;
+import ru.study.springboot.model.User;
+import ru.study.springboot.to.RestaurantOut;
+import ru.study.springboot.util.JsonUtil;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TestUtil {
     public static String getContent(MvcResult result) throws UnsupportedEncodingException {
@@ -30,4 +32,12 @@ public class TestUtil {
     public static RequestPostProcessor userHttpBasic(User user) {
         return SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword());
     }
+
+    public static List<RestaurantOut> getTestRestaurantsTo() {
+        return TestData.getTestRestaurants()
+                .stream()
+                .map(it -> new RestaurantOut(it, 0))
+                .collect(Collectors.toList());
+    }
+
 }

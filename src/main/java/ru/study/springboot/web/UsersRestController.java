@@ -21,13 +21,13 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping(value = UserRestController.REST_URL_USER, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = UsersRestController.REST_URL_USER, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 @Slf4j
-@Api(tags="User Controller")
-public class UserRestController {
+@Api(tags = "User Controller")
+public class UsersRestController {
 
-    static final String REST_URL_USER = "/api/account";
+    static final String REST_URL_USER = "/rest/account";
     private final UserRepository userRepository;
 
     @DeleteMapping
