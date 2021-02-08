@@ -1,17 +1,14 @@
 package ru.study.springboot.to;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.study.springboot.model.Menu;
 import ru.study.springboot.model.Restaurant;
 
 import java.util.List;
-import java.util.Objects;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor // ! no Creators, like default constructor, exist JsonUtil.java:24
 public class RestaurantOut {
     private Integer id;
     private String name;
@@ -27,19 +24,11 @@ public class RestaurantOut {
         this.rating = rating;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RestaurantOut that = (RestaurantOut) o;
-        return Objects.equals(getName(), that.getName()) &&
-                Objects.equals(getAddress(), that.getAddress()) &&
-                Objects.equals(getMenus(), that.getMenus()) &&
-                Objects.equals(getRating(), that.getRating());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getName(), getAddress(), getRating());
+    public RestaurantOut(Integer id, String name, String address) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.rating = null;
+        this.menus = null;
     }
 }

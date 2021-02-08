@@ -30,7 +30,7 @@ public class Meal extends AbstractNamedEntity {
     private Menu menu;
 
     public Meal(String name, Double price) {
-        super(name);
+        super(null, name);
         this.price = price;
     }
 

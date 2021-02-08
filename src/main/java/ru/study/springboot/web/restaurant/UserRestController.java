@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.study.springboot.AuthUser;
 import ru.study.springboot.error.IllegalRequestDataException;
 import ru.study.springboot.error.NotFoundException;
-import ru.study.springboot.model.Menu;
 import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.model.User;
 import ru.study.springboot.model.Vote;
@@ -34,8 +33,7 @@ import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 public class UserRestController {
     public static final String REST_URL_RESTAURANT_USER = "/rest/user/restaurant/";
     public static final String GET_ALL = "/getAll";
-    static final Integer MIN_COUNT_MEALS_FOR_MENU = 2;
-    static final Integer MAX_COUNT_MEALS_FOR_MENU = 5;
+
     static final LocalTime endTime = LocalTime.of(11, 0);
 
     private final VoteRepository votingRepository;
@@ -50,9 +48,7 @@ public class UserRestController {
     public RestaurantOut getRestaurantWithMenuOnDate(
             @PathVariable String name, @Param("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("get Restaurant {} on date {}", name, date);
-        Restaurant restaurant = restaurantRepository.findRestaurantWithMenuByDate(name
-                , date
-        )
+        Restaurant restaurant = restaurantRepository.findRestaurantWithMenuByDate(name, date)
                 .orElseThrow(() -> new NotFoundException("Restaurant id=" + name + " not found"));
         return toRatingRestaurant(restaurant);
     }
@@ -93,17 +89,6 @@ public class UserRestController {
 
     private RestaurantOut toRatingRestaurant(Restaurant restaurant) {
         Integer rating = votingRepository.getCountVoteByDateForRestaurant(restaurant.getId(), LocalDate.now());
-        return new RestaurantOut(restaurant
-                , rating
-        );
-    }
-
-    private void checkCountMeals(List<Menu> menus) {
-        for (Menu menu : menus) {
-            if (menu.getMeals().size() > MAX_COUNT_MEALS_FOR_MENU) throw new
-                    IllegalRequestDataException("Max count meals for menu = " + MAX_COUNT_MEALS_FOR_MENU);
-            if (menu.getMeals().size() < MIN_COUNT_MEALS_FOR_MENU) throw new
-                    IllegalRequestDataException("Min count meals for menu = " + MIN_COUNT_MEALS_FOR_MENU);
-        }
+        return new RestaurantOut(restaurant, rating);
     }
 }

@@ -1,30 +1,24 @@
 package ru.study.springboot.to;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Value;
 import ru.study.springboot.model.Restaurant;
 
 import javax.validation.constraints.NotNull;
 
-@Getter
+@Value
+@AllArgsConstructor
 public class RestaurantIn {
     @NotNull
-    private final String name;
-    private String address;
+    String name;
+    String address;
 
     public RestaurantIn(String name) {
         this.name = name;
-    }
-
-    public RestaurantIn(String name, String address) {
-        this.name = name;
-        this.address = address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
+        this.address = null;
     }
 
     public Restaurant toRestaurant() {
-        return new Restaurant(name, address);
+        return new Restaurant(null, name, address);
     }
 }

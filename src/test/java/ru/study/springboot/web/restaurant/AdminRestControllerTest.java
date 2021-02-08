@@ -7,7 +7,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.study.springboot.model.Role;
 import ru.study.springboot.model.User;
-import ru.study.springboot.repository.RestaurantRepository;
 import ru.study.springboot.repository.VoteRepository;
 import ru.study.springboot.to.RestaurantIn;
 import ru.study.springboot.to.RestaurantOut;
@@ -21,9 +20,6 @@ import static ru.study.springboot.web.restaurant.AdminRestController.REST_URL_RE
 class AdminRestControllerTest extends AbstractControllerTest {
 
     private static final User ADMIN = new User(2, "admin@ya.ru", "admin", Role.USER, Role.ADMIN);
-
-    @Autowired
-    private RestaurantRepository restaurantRepository;
 
     @Autowired
     private VoteRepository votingRepository;
@@ -49,17 +45,17 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         RestaurantOut restaurantsActual = TestUtil.readFromJsonMvcResult(action, RestaurantOut.class);
-        RestaurantOut restaurant = new RestaurantOut(TestData.getRestaurant(), 0);
+        RestaurantOut restaurant = new RestaurantOut(TestData.getTestRestaurants().get(0), 0);
         assertEquals(restaurant, restaurantsActual);
     }
 
     @Test
     void checkCreateRestaurantForAdminOk() throws Exception {
-        RestaurantIn restaurantIn = new RestaurantIn("newRestaurant");
+        RestaurantIn restaurantIn = new RestaurantIn("newRestaurant", "ул строителей ..");
         ResultActions action = getMvcResultPost(ADMIN, REST_URL_RESTAURANT_ADMIN, restaurantIn);
         action.andExpect(status().isCreated());
         RestaurantOut actualRestaurant = TestUtil.readFromJson(action, RestaurantOut.class);
-        RestaurantOut restaurantOut = new RestaurantOut(restaurantIn.toRestaurant(), null);
+        RestaurantOut restaurantOut = new RestaurantOut(5, restaurantIn.getName(), restaurantIn.getAddress());
         assertEquals(restaurantOut, actualRestaurant);
     }
 

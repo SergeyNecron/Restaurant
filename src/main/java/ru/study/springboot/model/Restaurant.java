@@ -33,18 +33,18 @@ public class Restaurant extends AbstractNamedEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Vote> votes = new ArrayList<>();
 
-    public Restaurant(String name, List<Menu> menus) {
-        super(name);
+    public Restaurant(Integer id, String name, List<Menu> menus) {
+        super(id, name);
         this.menus = menus;
     }
 
-    public Restaurant(String name, Menu menu) {
-        super(name);
+    public Restaurant(Integer id, String name, Menu menu) {
+        super(id, name);
         this.menus = List.of(menu);
     }
 
-    public Restaurant(String name, String address) {
-        super(name);
+    public Restaurant(Integer id, String name, String address) {
+        super(id, name);
         this.address = address;
     }
 

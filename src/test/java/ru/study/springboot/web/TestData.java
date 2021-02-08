@@ -55,26 +55,13 @@ public class TestData {
         menu1.setId(1);
     }
 
-    public static List<Menu> getTestMenus() {
-        List<Menu> menus = new ArrayList();
-        menus.add(new Menu("Меню дня", meals1));
-        menus.add(new Menu("Меню дня", meals2));
-        menus.add(new Menu("Меню дня", meals3));
-        menus.add(new Menu("Меню дня", meals4));
-        return menus;
-    }
-
     public static List<Restaurant> getTestRestaurants() {
-        List<Restaurant> menus = new ArrayList();
-        menus.add(new Restaurant("София", menu1));
-        menus.add(new Restaurant("Макдак", menu2));
-        menus.add(new Restaurant("Пицерия", menu3));
-        menus.add(new Restaurant("Закусочная", menu4));
-        return menus;
-    }
-
-    public static Restaurant getRestaurant() {
-        return new Restaurant("София", menu1);
+        List<Restaurant> restaurants = new ArrayList();
+        restaurants.add(new Restaurant(1, "София", menu1));
+        restaurants.add(new Restaurant(2, "Макдак", menu2));
+        restaurants.add(new Restaurant(3, "Пицерия", menu3));
+        restaurants.add(new Restaurant(4, "Закусочная", menu4));
+        return restaurants;
     }
 
 }

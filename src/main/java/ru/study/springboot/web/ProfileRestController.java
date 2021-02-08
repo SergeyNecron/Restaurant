@@ -21,11 +21,11 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping(value = UsersRestController.REST_URL_USER, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = ProfileRestController.REST_URL_USER, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 @Slf4j
 @Api(tags = "User Controller")
-public class UsersRestController {
+public class ProfileRestController {
 
     static final String REST_URL_USER = "/rest/account";
     private final UserRepository userRepository;

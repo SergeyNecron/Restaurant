@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.study.springboot.model.Role;
 import ru.study.springboot.model.User;
-import ru.study.springboot.repository.RestaurantRepository;
 import ru.study.springboot.repository.VoteRepository;
 import ru.study.springboot.to.RestaurantIn;
 import ru.study.springboot.to.RestaurantOut;
@@ -14,6 +13,7 @@ import ru.study.springboot.web.TestUtil;
 
 import java.time.LocalTime;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.study.springboot.web.restaurant.AdminRestController.REST_URL_RESTAURANT_ADMIN;
 import static ru.study.springboot.web.restaurant.UserRestController.GET_ALL;
@@ -23,9 +23,6 @@ class UserRestControllerTest extends AbstractControllerTest {
 
     private static final User USER = new User(1, "user@ya.ru", "user", Role.USER);
     private static final User USER_NOT_REGISTRATION = new User(3, "user2@ya.ru", "user2", Role.USER);
-
-    @Autowired
-    private RestaurantRepository restaurantRepository;
 
     @Autowired
     private VoteRepository votingRepository;
@@ -73,7 +70,7 @@ class UserRestControllerTest extends AbstractControllerTest {
         else {
             action.andExpect(status().isOk());
             RestaurantOut restaurantsActual = TestUtil.readFromJson(action, RestaurantOut.class);
-//            assertEquals(1, restaurantsActual.getRating());
+            assertEquals(1, restaurantsActual.getRating());
         }
     }
 
