@@ -24,7 +24,7 @@ import java.util.Set;
 @RequestMapping(value = ProfileRestController.REST_URL_USER, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 @Slf4j
-@Api(tags = "User Controller")
+@Api(tags = "Profile Controller")
 public class ProfileRestController {
 
     static final String REST_URL_USER = "/rest/account";

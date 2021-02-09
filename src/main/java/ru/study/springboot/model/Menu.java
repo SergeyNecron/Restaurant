@@ -31,19 +31,22 @@ public class Menu extends AbstractNamedEntity {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
+    @NotNull
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "menu")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Meal> meals;
 
-    public Menu(String name) {
-        super.name = name;
-        this.date = LocalDate.now();
-    }
 
     public Menu(String name, List<Meal> meals) {
         super.name = name;
         this.meals = meals;
         this.date = LocalDate.now();
+    }
+
+    public Menu(String name, LocalDate date, List<Meal> meals) {
+        super.name = name;
+        this.meals = meals;
+        this.date = date;
     }
 
     @Override
