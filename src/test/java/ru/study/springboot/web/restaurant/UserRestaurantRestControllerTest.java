@@ -24,6 +24,8 @@ class UserRestaurantRestControllerTest extends AbstractRestaurantControllerTest 
 
     private static final User USER = new User(1, "user@ya.ru", "user", Role.USER);
     private static final User USER_NOT_REGISTRATION = new User(3, "user2@ya.ru", "user2", Role.USER);
+    private static final LocalDateTime checkTimeBefore = LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 0));
+    private static final LocalDateTime checkTimeAfter = LocalDateTime.of(LocalDate.now(), LocalTime.of(12, 0));
 
     @Autowired
     private VoteRepository votingRepository;
@@ -65,20 +67,25 @@ class UserRestaurantRestControllerTest extends AbstractRestaurantControllerTest 
     }
 
     @Test
+    void checkDuplicateVoteForUserAfterEndTimeException() throws Exception {
+        getMvcResultPut(USER, 1);
+        assertThrows(IllegalRequestDataException.class, () -> {
+            userRestController.vote(USER, 1, checkTimeBefore);
+        });
+    }
+
+    @Test
     void checkReVoteForUserAfterEndTimeException() throws Exception {
         getMvcResultPut(USER, 1);
-        LocalDateTime checkTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(12, 0));
         assertThrows(IllegalRequestDataException.class, () -> {
-            userRestController.vote(USER, 2, checkTime);
+            userRestController.vote(USER, 2, checkTimeAfter);
         });
-
     }
 
     @Test
     void checkReVoteForUserBeforeEndTime() throws Exception {
         getMvcResultPut(USER, 1);
-        LocalDateTime checkTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 0));
-        RestaurantOut restaurantsActual = userRestController.vote(USER, 2, checkTime).getBody();
+        RestaurantOut restaurantsActual = userRestController.vote(USER, 2, checkTimeBefore).getBody();
         assertEquals(2, restaurantsActual.getId());
     }
 
@@ -88,5 +95,4 @@ class UserRestaurantRestControllerTest extends AbstractRestaurantControllerTest 
         ResultActions action = getMvcResultPost(USER, REST_URL_RESTAURANT_ADMIN, restaurant);
         action.andExpect(status().isForbidden());
     }
-
 }

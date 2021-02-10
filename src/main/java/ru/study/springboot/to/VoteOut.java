@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor // ! if no create: JsonUtil.java:24 (like default constructor, exist)
-public class RestaurantOut {
+public class VoteOut {
     @NotNull
     private Integer id;
     @NotNull
@@ -20,7 +20,7 @@ public class RestaurantOut {
     private Integer rating;
     private List<Menu> menus;
 
-    public RestaurantOut(Restaurant restaurant, Integer rating) {
+    public VoteOut(Restaurant restaurant, Integer rating) {
         this.id = restaurant.getId();
         this.name = restaurant.getName();
         this.address = restaurant.getAddress();
@@ -28,7 +28,7 @@ public class RestaurantOut {
         this.rating = rating;
     }
 
-    public RestaurantOut(Integer id, String name, String address) {
+    public VoteOut(Integer id, String name, String address) {
         this.id = id;
         this.name = name;
         this.address = address;

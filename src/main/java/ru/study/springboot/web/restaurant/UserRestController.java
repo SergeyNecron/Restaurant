@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.study.springboot.AuthUser;
-import ru.study.springboot.error.IllegalRequestDataException;
 import ru.study.springboot.error.NotFoundException;
 import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.model.User;
@@ -22,9 +21,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
+import static ru.study.springboot.util.ValidationUtil.*;
 
 @RestController
 @RequestMapping(value = UserRestController.REST_URL_RESTAURANT_USER)
@@ -34,9 +34,7 @@ import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 public class UserRestController {
     public static final String REST_URL_RESTAURANT_USER = "/rest/user/restaurant";
 
-    public static final LocalTime endTime = LocalTime.of(11, 0);
-
-    private final VoteRepository votingRepository;
+    private final VoteRepository voteRepository;
     private final RestaurantRepository restaurantRepository;
 
     @GetMapping("/{name}")
@@ -76,24 +74,25 @@ public class UserRestController {
         return vote(user, restaurant_id, LocalDateTime.now());
     }
 
-
-    public ResponseEntity<RestaurantOut> vote(User user, int restaurant_id, LocalDateTime dateTime) {
-        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.getById(restaurant_id), restaurant_id);
-        log.info("user id = {} voting restaurant =  {}", user.id(), restaurant.getName());
-        checkReVote(dateTime, user);
-        votingRepository.save(new Vote(dateTime.toLocalDate(), user, restaurant));
+    public ResponseEntity<RestaurantOut> vote(User user, int restaurantId, LocalDateTime dateTime) {
+        Optional<Vote> vote = voteRepository.getVoteByDateAndUser(dateTime.toLocalDate(), user);
+        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.getById(restaurantId), restaurantId);
+        Vote voteNew = vote.isEmpty() ? voteRepository.save(new Vote(dateTime.toLocalDate(), user, restaurant))
+                : updateVote(vote.get(), dateTime.toLocalTime(), restaurant);
+        log.info("create|update vote: date = {}, user_id = {}, restaurant = {}",
+                voteNew.getDate(), voteNew.getUser().id(), voteNew.getRestaurant().getName());
         return getRestaurantsWithMenuToDay(restaurant.getName());
     }
 
-    private void checkReVote(LocalDateTime timeReVote, User user) {
-        if (timeReVote.toLocalTime().isAfter(endTime)
-                && (votingRepository.existsByDateAndUser(timeReVote.toLocalDate(), user))
-        )
-            throw new IllegalRequestDataException("you cannot re-vote after: " + endTime);
+    private Vote updateVote(Vote vote, LocalTime time, Restaurant restaurant) {
+        checkReVote(time);
+        checkNotDuplicate(vote.getRestaurant().id(), restaurant.id());
+        vote.setRestaurant(restaurant);
+        return voteRepository.save(vote);
     }
 
     private RestaurantOut toRatingRestaurant(Restaurant restaurant) {
-        Integer rating = votingRepository.getCountVoteByDateForRestaurant(restaurant.getId(), LocalDate.now());
+        Integer rating = voteRepository.getCountVoteByDateForRestaurant(restaurant.id(), LocalDate.now());
         return new RestaurantOut(restaurant, rating);
     }
 }
