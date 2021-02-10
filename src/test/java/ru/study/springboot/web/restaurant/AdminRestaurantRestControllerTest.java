@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.study.springboot.web.restaurant.AdminRestController.REST_URL_RESTAURANT_ADMIN;
 
-class RestaurantRestControllerTest extends AbstractControllerTest {
+class AdminRestaurantRestControllerTest extends AbstractRestaurantControllerTest {
 
     private static final User ADMIN = new User(2, "admin@ya.ru", "admin", Role.USER, Role.ADMIN);
 
@@ -41,7 +41,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
 
     @Test
     void checkGetRestaurantForAdmin() throws Exception {
-        MvcResult action = getMvcResultGet(ADMIN, "София")
+        MvcResult action = getMvcResultGet(ADMIN, "/София")
                 .andExpect(status().isOk())
                 .andReturn();
         RestaurantOut restaurantsActual = TestUtil.readFromJsonMvcResult(action, RestaurantOut.class);

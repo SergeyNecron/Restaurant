@@ -4,28 +4,32 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
+import ru.study.springboot.error.IllegalRequestDataException;
 import ru.study.springboot.model.Role;
 import ru.study.springboot.model.User;
 import ru.study.springboot.repository.VoteRepository;
 import ru.study.springboot.to.RestaurantIn;
 import ru.study.springboot.to.RestaurantOut;
-import ru.study.springboot.web.TestUtil;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.study.springboot.web.restaurant.AdminRestController.REST_URL_RESTAURANT_ADMIN;
-import static ru.study.springboot.web.restaurant.UserRestController.GET_ALL;
-import static ru.study.springboot.web.restaurant.UserRestController.endTime;
 
-class UserRestControllerTest extends AbstractControllerTest {
+class UserRestaurantRestControllerTest extends AbstractRestaurantControllerTest {
 
     private static final User USER = new User(1, "user@ya.ru", "user", Role.USER);
     private static final User USER_NOT_REGISTRATION = new User(3, "user2@ya.ru", "user2", Role.USER);
 
     @Autowired
     private VoteRepository votingRepository;
+
+    @Autowired
+    private UserRestController userRestController;
 
     @BeforeEach
     public void clear() {
@@ -39,7 +43,7 @@ class UserRestControllerTest extends AbstractControllerTest {
 
     @Test
     void checkUnauthorizedGet() throws Exception {
-        getMvcResultGet(USER_NOT_REGISTRATION, GET_ALL)
+        getMvcResultGet(USER_NOT_REGISTRATION, "/")
                 .andExpect(status().isUnauthorized());
     }
 
@@ -61,17 +65,21 @@ class UserRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void checkReVoteForUser() throws Exception {
+    void checkReVoteForUserAfterEndTimeException() throws Exception {
         getMvcResultPut(USER, 1);
-        ResultActions action = getMvcResultPut(USER, 1);
-        LocalTime checkTime = LocalTime.now();
-        if (checkTime.isAfter(endTime))
-            action.andExpect(status().isUnprocessableEntity());
-        else {
-            action.andExpect(status().isOk());
-            RestaurantOut restaurantsActual = TestUtil.readFromJson(action, RestaurantOut.class);
-            assertEquals(1, restaurantsActual.getRating());
-        }
+        LocalDateTime checkTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(12, 0));
+        assertThrows(IllegalRequestDataException.class, () -> {
+            userRestController.vote(USER, 2, checkTime);
+        });
+
+    }
+
+    @Test
+    void checkReVoteForUserBeforeEndTime() throws Exception {
+        getMvcResultPut(USER, 1);
+        LocalDateTime checkTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 0));
+        RestaurantOut restaurantsActual = userRestController.vote(USER, 2, checkTime).getBody();
+        assertEquals(2, restaurantsActual.getId());
     }
 
     @Test

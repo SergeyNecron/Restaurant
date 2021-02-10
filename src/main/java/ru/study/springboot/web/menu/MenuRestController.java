@@ -3,6 +3,7 @@ package ru.study.springboot.web.menu;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,7 +23,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static ru.study.springboot.util.ValidationUtil.*;
-import static ru.study.springboot.web.restaurant.UserRestController.GET_ALL;
 
 @RestController
 @RequestMapping(value = MenuRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -30,7 +30,7 @@ import static ru.study.springboot.web.restaurant.UserRestController.GET_ALL;
 @AllArgsConstructor
 @Api(tags = "Admin Menu Controller")
 public class MenuRestController {
-    static final String REST_URL = "/rest/admin/menu/";
+    static final String REST_URL = "/rest/admin/menu";
     static final Integer MIN_COUNT_MEALS_FOR_MENU = 2;
     static final Integer MAX_COUNT_MEALS_FOR_MENU = 5;
 
@@ -43,14 +43,14 @@ public class MenuRestController {
         return ResponseEntity.of(menuRepository.findById(id));
     }
 
-    @GetMapping(GET_ALL)
+    @GetMapping
     public List<Menu> getAll() {
         log.info("getAll");
         return menuRepository.findAll();
     }
 
-    @GetMapping("/date/{date}")
-    public List<Menu> getAllByDate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    @GetMapping("/date")
+    public List<Menu> getAllByDate(@Param("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("Get menus by date {}", date);
         return menuRepository.findAllByDate(date);
     }
