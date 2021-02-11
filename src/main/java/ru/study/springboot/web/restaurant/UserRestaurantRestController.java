@@ -6,32 +6,26 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-import ru.study.springboot.AuthUser;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.study.springboot.error.NotFoundException;
 import ru.study.springboot.model.Restaurant;
-import ru.study.springboot.model.User;
-import ru.study.springboot.model.Vote;
 import ru.study.springboot.repository.RestaurantRepository;
 import ru.study.springboot.repository.VoteRepository;
 import ru.study.springboot.to.RestaurantOut;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ru.study.springboot.util.ValidationUtil.*;
-
 @RestController
-@RequestMapping(value = UserRestController.REST_URL_RESTAURANT_USER)
+@RequestMapping(value = UserRestaurantRestController.REST_URL_RESTAURANT_USER)
 @Slf4j
 @AllArgsConstructor
 @Api(tags = "User Restaurant Controller")
-public class UserRestController {
+public class UserRestaurantRestController {
     public static final String REST_URL_RESTAURANT_USER = "/rest/user/restaurant";
 
     private final VoteRepository voteRepository;
@@ -66,29 +60,6 @@ public class UserRestController {
                 .stream()
                 .map(this::toRatingRestaurant)
                 .collect(Collectors.toList());
-    }
-
-    @PutMapping("/{restaurant_id}")
-    public ResponseEntity<RestaurantOut> voteNow(@AuthenticationPrincipal AuthUser authUser, @PathVariable int restaurant_id) {
-        User user = authUser.getUser();
-        return vote(user, restaurant_id, LocalDateTime.now());
-    }
-
-    public ResponseEntity<RestaurantOut> vote(User user, int restaurantId, LocalDateTime dateTime) {
-        Optional<Vote> vote = voteRepository.getVoteByDateAndUser(dateTime.toLocalDate(), user);
-        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.getById(restaurantId), restaurantId);
-        Vote voteNew = vote.isEmpty() ? voteRepository.save(new Vote(dateTime.toLocalDate(), user, restaurant))
-                : updateVote(vote.get(), dateTime.toLocalTime(), restaurant);
-        log.info("create|update vote: date = {}, user_id = {}, restaurant = {}",
-                voteNew.getDate(), voteNew.getUser().id(), voteNew.getRestaurant().getName());
-        return getRestaurantsWithMenuToDay(restaurant.getName());
-    }
-
-    private Vote updateVote(Vote vote, LocalTime time, Restaurant restaurant) {
-        checkReVote(time);
-        checkNotDuplicate(vote.getRestaurant().id(), restaurant.id());
-        vote.setRestaurant(restaurant);
-        return voteRepository.save(vote);
     }
 
     private RestaurantOut toRatingRestaurant(Restaurant restaurant) {

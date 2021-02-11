@@ -20,11 +20,11 @@ import java.net.URI;
 import static ru.study.springboot.util.ValidationUtil.checkNotDuplicate;
 
 @RestController
-@RequestMapping(value = AdminRestController.REST_URL_RESTAURANT_ADMIN)
+@RequestMapping(value = AdminRestaurantRestController.REST_URL_RESTAURANT_ADMIN)
 @Slf4j
 @AllArgsConstructor
 @Api(tags = "Admin Restaurant Controller")
-public class AdminRestController {
+public class AdminRestaurantRestController {
     static final String REST_URL_RESTAURANT_ADMIN = "/rest/admin/restaurant/";
     private final RestaurantRepository restaurantRepository;
 

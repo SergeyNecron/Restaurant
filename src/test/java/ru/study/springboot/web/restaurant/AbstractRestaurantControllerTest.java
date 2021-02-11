@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.study.springboot.model.User;
 import ru.study.springboot.to.RestaurantIn;
 import ru.study.springboot.to.RestaurantOut;
+import ru.study.springboot.to.VoteOut;
 import ru.study.springboot.util.JsonUtil;
 import ru.study.springboot.web.TestUtil;
 
@@ -27,7 +28,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.study.springboot.web.TestUtil.getTestRestaurantsTo;
-import static ru.study.springboot.web.restaurant.UserRestController.REST_URL_RESTAURANT_USER;
+import static ru.study.springboot.web.restaurant.UserRestaurantRestController.REST_URL_RESTAURANT_USER;
+import static ru.study.springboot.web.vote.UserVoteRestController.REST_URL_VOTE_USER;
 
 //https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-testing-spring-boot-applications
 @ExtendWith(SpringExtension.class)
@@ -54,7 +56,7 @@ public abstract class AbstractRestaurantControllerTest {
     }
 
     protected ResultActions getMvcResultPut(User user, Integer id) throws Exception {
-        return getMvcResult(user, MockMvcRequestBuilders.put(REST_URL_RESTAURANT_USER + "/" + id));
+        return getMvcResult(user, MockMvcRequestBuilders.put(REST_URL_VOTE_USER + "/" + id));
     }
 
     protected ResultActions getMvcResultPost(User user, String url, RestaurantIn restaurant) throws Exception {
@@ -76,8 +78,8 @@ public abstract class AbstractRestaurantControllerTest {
         MvcResult action = getMvcResultPut(user, 1)
                 .andExpect(status().isOk())
                 .andReturn();
-        RestaurantOut restaurantsActual = TestUtil.readFromJsonMvcResult(action, RestaurantOut.class);
-        assertEquals(1, restaurantsActual.getRating());
+        VoteOut voteOut = TestUtil.readFromJsonMvcResult(action, VoteOut.class);
+        assertEquals(1, voteOut.getRestaurantId());
     }
 
     private ResultActions getMvcResult(User user, MockHttpServletRequestBuilder mockHttpServletRequestBuilder) throws Exception {

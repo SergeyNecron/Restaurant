@@ -1,14 +1,18 @@
 package ru.study.springboot.to;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import ru.study.springboot.model.Menu;
 import ru.study.springboot.model.Restaurant;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Data
+@Getter
+@ToString
+@EqualsAndHashCode
 @NoArgsConstructor // ! if no create: JsonUtil.java:24 (like default constructor, exist)
 public class RestaurantOut {
     @NotNull

@@ -1,14 +1,12 @@
 package ru.study.springboot.web;
 
-import ru.study.springboot.model.Meal;
-import ru.study.springboot.model.Menu;
-import ru.study.springboot.model.Restaurant;
+import ru.study.springboot.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestData {
-
+    public static final User USER = new User(1, "user@ya.ru", "user", Role.USER);
     static List<Meal> meals1 = new ArrayList();
     static List<Meal> meals2 = new ArrayList();
     static List<Meal> meals3 = new ArrayList();
@@ -63,5 +61,4 @@ public class TestData {
         restaurants.add(new Restaurant(4, "Закусочная", menu4));
         return restaurants;
     }
-
 }

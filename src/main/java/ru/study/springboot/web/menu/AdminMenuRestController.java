@@ -25,11 +25,11 @@ import java.util.List;
 import static ru.study.springboot.util.ValidationUtil.*;
 
 @RestController
-@RequestMapping(value = MenuRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = AdminMenuRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
 @Api(tags = "Admin Menu Controller")
-public class MenuRestController {
+public class AdminMenuRestController {
     static final String REST_URL = "/rest/admin/menu";
     static final Integer MIN_COUNT_MEALS_FOR_MENU = 2;
     static final Integer MAX_COUNT_MEALS_FOR_MENU = 5;

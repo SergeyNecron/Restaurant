@@ -15,7 +15,7 @@ import ru.study.springboot.web.TestUtil;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.study.springboot.web.restaurant.AdminRestController.REST_URL_RESTAURANT_ADMIN;
+import static ru.study.springboot.web.restaurant.AdminRestaurantRestController.REST_URL_RESTAURANT_ADMIN;
 
 class AdminRestaurantRestControllerTest extends AbstractRestaurantControllerTest {
 
