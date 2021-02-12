@@ -58,14 +58,4 @@ public class ValidationUtil {
         if (optional.isPresent())
             throw new IllegalRequestDataException("Entity " + name + " duplicate");
     }
-
-    public static void checkReVote(LocalTime timeReVote) {
-        if (timeReVote.isAfter(endTime))
-            throw new IllegalRequestDataException("you cannot re-vote after: " + endTime);
-    }
-
-    public static void checkNotDuplicate(int restaurantId, int restaurantIdNew) {
-        if (restaurantId == restaurantIdNew)
-            throw new IllegalRequestDataException("vote restaurant id = " + restaurantIdNew + " is duplicate");
-    }
 }

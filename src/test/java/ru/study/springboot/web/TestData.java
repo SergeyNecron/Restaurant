@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestData {
+
+    public static final User ADMIN = new User(2, "admin@ya.ru", "admin", Role.USER, Role.ADMIN);
     public static final User USER = new User(1, "user@ya.ru", "user", Role.USER);
+    public static final User USER_NOT_REGISTRATION = new User(3, "user2@ya.ru", "user2", Role.USER);
+
     static List<Meal> meals1 = new ArrayList();
     static List<Meal> meals2 = new ArrayList();
     static List<Meal> meals3 = new ArrayList();
@@ -50,7 +54,6 @@ public class TestData {
         menu2 = new Menu("Меню дня", meals2);
         menu3 = new Menu("Меню дня", meals3);
         menu4 = new Menu("Меню дня", meals4);
-        menu1.setId(1);
     }
 
     public static List<Restaurant> getTestRestaurants() {
