@@ -17,9 +17,9 @@ import java.util.List;
 public class UserRestaurantRestController extends AbstractRestaurantController {
     static final String REST_URL_RESTAURANT_USER = "/rest/user/restaurant";
 
-    @GetMapping("/{name}")
-    public ResponseEntity<RestaurantOut> getRestaurantWithRatingAndMenusNow(@PathVariable String name) {
-        return ResponseEntity.ok(get(name, LocalDate.now()));
+    @GetMapping("/{id}")
+    public ResponseEntity<RestaurantOut> getRestaurantWithRatingAndMenusNow(@PathVariable Integer id) {
+        return ResponseEntity.ok(get(id, LocalDate.now()));
     }
 
     @GetMapping

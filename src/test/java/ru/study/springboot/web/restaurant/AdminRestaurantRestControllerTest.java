@@ -21,7 +21,7 @@ class AdminRestaurantRestControllerTest extends AbstractRestaurantControllerTest
 
     @Test
     void checkGetRestaurantForAdmin() throws Exception {
-        MvcResult action = getMvcResultGet(ADMIN, "София")
+        MvcResult action = getMvcResultGet(ADMIN, 1)
                 .andExpect(status().isOk())
                 .andReturn();
         RestaurantOut restaurantsActual = TestUtil.readFromJsonMvcResult(action, RestaurantOut.class);

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.study.springboot.util.ValidationUtil.checkNotDuplicate;
+import static ru.study.springboot.util.ValidationUtil.*;
 
 @Slf4j
 public abstract class AbstractRestaurantController {
@@ -23,16 +23,10 @@ public abstract class AbstractRestaurantController {
     @Autowired
     private VoteRepository voteRepository;
 
-    public Restaurant create(Restaurant restaurant) {
-        log.info("create restaurant: {}", restaurant);
-        checkNotDuplicate(restaurantRepository.getByName(restaurant.getName()), restaurant.getName());
-        return restaurantRepository.save(restaurant);
-    }
-
-    public RestaurantOut get(String name, LocalDate date) {
-        log.info("get restaurant {} with rating and menus by date {} ", name, date);
-        return toRatingRestaurant(restaurantRepository.findRestaurantWithMenuByDate(name, date)
-                .orElseThrow(() -> new NotFoundException("RestaurantOut id=" + name + " not found")));
+    public RestaurantOut get(Integer id, LocalDate date) {
+        log.info("get restaurant id = {}, with rating and menus by date {} ", id, date);
+        return toRatingRestaurant(restaurantRepository.findRestaurantWithMenuByDate(id, date)
+                .orElseThrow(() -> new NotFoundException("RestaurantOut id=" + id + " not found")));
     }
 
     public List<RestaurantOut> getAll(LocalDate date) {
@@ -41,6 +35,24 @@ public abstract class AbstractRestaurantController {
                 .stream()
                 .map(this::toRatingRestaurant)
                 .collect(Collectors.toList());
+    }
+
+    public Restaurant create(Restaurant restaurant) {
+        log.info("create restaurant: {}", restaurant);
+        checkNotDuplicate(restaurantRepository.getByName(restaurant.getName()), restaurant.getName());
+        return restaurantRepository.save(restaurant);
+    }
+
+    public void delete(int id) {
+        log.info("delete {}", id);
+        checkSingleModification(restaurantRepository.delete(id), "Restaurant id=" + id + " missed");
+    }
+
+    public void update(Restaurant restaurant, int id) {
+        log.info("update restaurant: {}", restaurant);
+        assureIdConsistent(restaurant, id); // restaurant.id == id ?
+        checkNotFoundWithId(restaurantRepository.findById(id), id);
+        restaurantRepository.save(restaurant);
     }
 
     private RestaurantOut toRatingRestaurant(Restaurant restaurant) {
