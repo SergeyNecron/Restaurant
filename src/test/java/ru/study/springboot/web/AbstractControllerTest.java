@@ -45,6 +45,16 @@ public abstract class AbstractControllerTest {
                 .content(JsonUtil.writeValue(entity)));
     }
 
+    protected ResultActions getMvcResultPut(User user, String url, AbstractBaseEntity entity) throws Exception {
+        return getMvcResult(user, MockMvcRequestBuilders.put(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(entity)));
+    }
+
+    protected ResultActions getMvcResultDelete(User user, String url) throws Exception {
+        return getMvcResult(user, MockMvcRequestBuilders.delete(url));
+    }
+
     private ResultActions getMvcResult(User user, MockHttpServletRequestBuilder mockHttpServletRequestBuilder) throws Exception {
         return perform(mockHttpServletRequestBuilder
                 .with(userHttpBasic(user)))

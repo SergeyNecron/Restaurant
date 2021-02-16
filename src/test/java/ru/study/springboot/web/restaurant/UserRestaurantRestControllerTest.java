@@ -1,42 +1,66 @@
 package ru.study.springboot.web.restaurant;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.test.web.servlet.ResultActions;
-import ru.study.springboot.to.RestaurantIn;
+import org.springframework.test.web.servlet.MvcResult;
+import ru.study.springboot.model.User;
+import ru.study.springboot.to.RestaurantOut;
+import ru.study.springboot.web.TestUtil;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.study.springboot.web.TestData.USER;
-import static ru.study.springboot.web.TestData.USER_NOT_REGISTRATION;
+import static ru.study.springboot.web.TestData.*;
+import static ru.study.springboot.web.TestUtil.getTestRestaurantsTo;
 
 class UserRestaurantRestControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
+    void getRestaurantWithRatingAndMenusNowUser() throws Exception {
+        get(USER, 1);
+    }
+
+    @Test
+    void getRestaurantWithRatingAndMenusNowForAdmin() throws Exception {
+        get(ADMIN, 1);
+    }
+
+    @Test
+    void getRestaurantWithRatingAndMenusNowForUnAuthFailed() throws Exception {
+        getMvcResultGet(USER_NOT_REGISTRATION, 1)
+                .andExpect(status().isUnauthorized());
+    }
+
+    private void get(User user, Integer id) throws Exception {
+        MvcResult action = getMvcResultGet(user, id)
+                .andExpect(status().isOk())
+                .andReturn();
+        RestaurantOut restaurantsActual = TestUtil.readFromJsonMvcResult(action, RestaurantOut.class);
+        assertEquals(getTestRestaurantsTo().get(0), restaurantsActual);
+    }
+
+    @Test
     void getAllRestaurantsWithMenuNowUser() throws Exception {
-        getAllRestaurantsWithMenuNow(USER);
+        getAll(USER);
     }
 
     @Test
-    void createRestaurantForUserFailed() throws Exception {
-        RestaurantIn restaurant = new RestaurantIn("newRestaurant");
-        ResultActions action = getMvcResultPost(USER, restaurant);
-        action.andExpect(status().isForbidden());
+    void getAllRestaurantsWithMenuNowForAdmin() throws Exception {
+        getAll(ADMIN);
     }
 
     @Test
-    void getUnAuth() throws Exception {
+    void getAllRestaurantsWithMenuNowForUnAuthFailed() throws Exception {
         getMvcResultGet(USER_NOT_REGISTRATION)
                 .andExpect(status().isUnauthorized());
     }
 
-    @Test
-    void votingUnAuth() throws Exception {
-        getMvcResultGet(USER_NOT_REGISTRATION, 2)
-                .andExpect(status().isUnauthorized());
+    private void getAll(User user) throws Exception {
+        MvcResult action = getMvcResultGet(user)
+                .andExpect(status().isOk())
+                .andReturn();
+        List<RestaurantOut> restaurantsActual = TestUtil.readListFromJsonMvcResult(action, RestaurantOut.class);
+        assertEquals(getTestRestaurantsTo(), restaurantsActual);
     }
 
-    @Test
-    void createUnAuth() throws Exception {
-        getMvcResultPost(USER_NOT_REGISTRATION, new RestaurantIn("newRestaurant"))
-                .andExpect(status().isUnauthorized());
-    }
 }

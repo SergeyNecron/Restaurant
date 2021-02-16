@@ -17,8 +17,7 @@ import java.time.LocalTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.study.springboot.web.TestData.ADMIN;
-import static ru.study.springboot.web.TestData.USER;
+import static ru.study.springboot.web.TestData.*;
 import static ru.study.springboot.web.vote.UserVoteRestController.REST_URL_VOTE_USER;
 
 class UserVoteRestControllerTest extends AbstractRestaurantControllerTest {
@@ -67,5 +66,11 @@ class UserVoteRestControllerTest extends AbstractRestaurantControllerTest {
 
     private ResultActions getMvcResultPut(User user, Integer id) throws Exception {
         return super.getMvcResultPut(user, REST_URL_VOTE_USER + "/" + id);
+    }
+
+    @Test
+    void votingUnAuth() throws Exception {
+        getMvcResultGet(USER_NOT_REGISTRATION, 2)
+                .andExpect(status().isUnauthorized());
     }
 }

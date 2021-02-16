@@ -6,6 +6,7 @@ import ru.study.springboot.error.NotFoundException;
 import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.repository.RestaurantRepository;
 import ru.study.springboot.repository.VoteRepository;
+import ru.study.springboot.to.RestaurantIn;
 import ru.study.springboot.to.RestaurantOut;
 
 import java.time.LocalDate;
@@ -43,16 +44,18 @@ public abstract class AbstractRestaurantController {
         return restaurantRepository.save(restaurant);
     }
 
-    public void delete(int id) {
-        log.info("delete {}", id);
-        checkSingleModification(restaurantRepository.delete(id), "Restaurant id=" + id + " missed");
+    public void update(RestaurantIn restaurantIn, int id) {
+        log.info("update restaurant: {}", restaurantIn);
+        assureIdConsistent(restaurantIn, id); // restaurant.id == id ?
+        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.findRestaurantWithMenuByDate(1, LocalDate.now()), id);
+        restaurant.setName(restaurantIn.getName());
+        restaurant.setAddress(restaurantIn.getAddress());
+        restaurantRepository.save(restaurant);
     }
 
-    public void update(Restaurant restaurant, int id) {
-        log.info("update restaurant: {}", restaurant);
-        assureIdConsistent(restaurant, id); // restaurant.id == id ?
-        checkNotFoundWithId(restaurantRepository.findById(id), id);
-        restaurantRepository.save(restaurant);
+    public void delete(int id) {
+        log.info("delete {}", id);
+        checkSingleModification(restaurantRepository.delete(id), "Restaurant id = " + id + " missed");
     }
 
     private RestaurantOut toRatingRestaurant(Restaurant restaurant) {
