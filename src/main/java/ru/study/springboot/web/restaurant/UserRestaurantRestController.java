@@ -19,7 +19,7 @@ public class UserRestaurantRestController extends AbstractRestaurantController {
 
     @GetMapping("/{id}")
     public ResponseEntity<RestaurantOut> getRestaurantWithRatingAndMenusNow(@PathVariable Integer id) {
-        return ResponseEntity.ok(get(id, LocalDate.now()));
+        return ResponseEntity.ok(get(id));
     }
 
     @GetMapping

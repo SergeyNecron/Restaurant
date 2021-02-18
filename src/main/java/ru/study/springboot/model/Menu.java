@@ -1,14 +1,16 @@
 package ru.study.springboot.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
@@ -24,29 +26,28 @@ public class Menu extends AbstractNamedEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
-    @JsonBackReference(value = "restaurant-menu")
+    @JsonBackReference
     private Restaurant restaurant;
 
     @NotNull
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @NotNull
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "menu")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    @Fetch(FetchMode.SUBSELECT)
+    @Valid
     private List<Meal> meals;
 
-
-    public Menu(String name, List<Meal> meals) {
-        super.name = name;
-        this.meals = meals;
-        this.date = LocalDate.now();
-    }
-
-    public Menu(String name, LocalDate date, List<Meal> meals) {
-        super.name = name;
+    public Menu(Integer id, String name, LocalDate date, List<Meal> meals) {
+        super(id, name);
         this.meals = meals;
         this.date = date;
+    }
+
+    public Menu(String name, List<Meal> meals) {
+        this(null, name, LocalDate.now(), meals);
     }
 
     @Override
@@ -68,6 +69,7 @@ public class Menu extends AbstractNamedEntity {
     public String toString() {
         return "{" +
                 "id=" + id +
+                ", name=" + name +
                 ", date=" + date +
                 ", meals=" + meals +
                 '}';

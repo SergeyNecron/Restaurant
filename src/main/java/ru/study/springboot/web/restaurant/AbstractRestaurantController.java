@@ -24,9 +24,9 @@ public abstract class AbstractRestaurantController {
     @Autowired
     private VoteRepository voteRepository;
 
-    public RestaurantOut get(Integer id, LocalDate date) {
-        log.info("get restaurant id = {}, with rating and menus by date {} ", id, date);
-        return toRatingRestaurant(restaurantRepository.findRestaurantWithMenuByDate(id, date)
+    public RestaurantOut get(Integer id) {
+        log.info("get restaurant id = {}, with rating and menus", id);
+        return toRatingRestaurant(restaurantRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("RestaurantOut id=" + id + " not found")));
     }
 
@@ -47,15 +47,17 @@ public abstract class AbstractRestaurantController {
     public void update(RestaurantIn restaurantIn, int id) {
         log.info("update restaurant: {}", restaurantIn);
         assureIdConsistent(restaurantIn, id); // restaurant.id == id ?
-        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.findRestaurantWithMenuByDate(1, LocalDate.now()), id);
+        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.getById(id), id);
         restaurant.setName(restaurantIn.getName());
         restaurant.setAddress(restaurantIn.getAddress());
         restaurantRepository.save(restaurant);
+        log.info("Restaurant id =" + id + " has been update");
     }
 
     public void delete(int id) {
         log.info("delete {}", id);
-        checkSingleModification(restaurantRepository.delete(id), "Restaurant id = " + id + " missed");
+        restaurantRepository.deleteById(id);
+        log.info("Restaurant id =" + id + " has been deleted");
     }
 
     private RestaurantOut toRatingRestaurant(Restaurant restaurant) {

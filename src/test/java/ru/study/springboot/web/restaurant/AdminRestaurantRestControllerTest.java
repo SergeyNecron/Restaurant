@@ -19,27 +19,6 @@ import static ru.study.springboot.web.TestUtil.getTestRestaurantsTo;
 class AdminRestaurantRestControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
-    void getRestaurantWithMenuByDateForUserFailed() throws Exception {
-        getMvcResultGet(USER, 3, LocalDate.now())
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    void getRestaurantWithMenuByDateForAdmin() throws Exception {
-        MvcResult action = getMvcResultGet(ADMIN, 1, LocalDate.now())
-                .andExpect(status().isOk())
-                .andReturn();
-        RestaurantOut restaurantsActual = TestUtil.readFromJsonMvcResult(action, RestaurantOut.class);
-        assertEquals(getTestRestaurantsTo().get(0), restaurantsActual);
-    }
-
-    @Test
-    void getRestaurantWithMenuByDateForUnAuthFailed() throws Exception {
-        getMvcResultGet(USER_NOT_REGISTRATION, 3, LocalDate.now())
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     void getAllRestaurantsWithMenuByDateForUserFailed() throws Exception {
         getMvcResultGet(USER, LocalDate.now())
                 .andExpect(status().isForbidden());
@@ -100,8 +79,8 @@ class AdminRestaurantRestControllerTest extends AbstractRestaurantControllerTest
         getMvcResultPut(ADMIN, 1, restaurantIn)
                 .andExpect(status().isNoContent());
         RestaurantOut restaurantsActual = TestUtil.readFromJsonMvcResult(
-                getMvcResultGet(ADMIN, 1, LocalDate.now()).andReturn(), RestaurantOut.class);
-        Restaurant restaurant = getTestRestaurants().get(0);
+                getMvcResultGet(ADMIN, 1).andReturn(), RestaurantOut.class);
+        Restaurant restaurant = new Restaurant(1, restaurantIn.getName(), menu1);
         restaurant.setName(restaurantIn.getName());
         assertEquals(new RestaurantOut(restaurant, 0), restaurantsActual);
     }
@@ -122,7 +101,7 @@ class AdminRestaurantRestControllerTest extends AbstractRestaurantControllerTest
     void deleteRestaurantWithMenusWithMealsForAdmin() throws Exception {
         getMvcResultDelete(ADMIN, 2)
                 .andExpect(status().isNoContent());
-        getMvcResultGet(ADMIN, 2, LocalDate.now())
+        getMvcResultGet(ADMIN, 2)
                 .andExpect(status().isUnprocessableEntity());
     }
 

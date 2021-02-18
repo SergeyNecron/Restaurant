@@ -29,10 +29,6 @@ public abstract class AbstractRestaurantControllerTest extends AbstractControlle
         return super.getMvcResultGet(user, REST_URL_RESTAURANT_ADMIN + "/" + date);
     }
 
-    protected ResultActions getMvcResultGet(User user, Integer id, LocalDate date) throws Exception {
-        return super.getMvcResultGet(user, REST_URL_RESTAURANT_ADMIN + "/" + id + "/" + date);
-    }
-
     protected ResultActions getMvcResultPost(User user, RestaurantIn restaurantIn) throws Exception {
         return super.getMvcResultPost(user, REST_URL_RESTAURANT_ADMIN, restaurantIn);
     }

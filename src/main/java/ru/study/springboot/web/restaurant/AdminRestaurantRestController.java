@@ -24,12 +24,6 @@ import java.util.List;
 public class AdminRestaurantRestController extends AbstractRestaurantController {
     static final String REST_URL_RESTAURANT_ADMIN = "/rest/admin/restaurant";
 
-    @GetMapping("/{id}/{date}")
-    public ResponseEntity<RestaurantOut> getRestaurantWithRatingAndMenusByDate(
-            @PathVariable Integer id, @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return ResponseEntity.ok(get(id, date));
-    }
-
     @GetMapping("/{date}")
     public List<RestaurantOut> getAllRestaurantsWithMenuByDate(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {

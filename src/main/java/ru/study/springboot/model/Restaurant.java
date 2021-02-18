@@ -5,10 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,16 +20,21 @@ public class Restaurant extends AbstractNamedEntity {
 
     private String address;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant")
-    // restaurant-menu https://stackoverflow.com/questions/20119142/
-    @JsonManagedReference(value = "restaurant-menu")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    //  fix: java.lang.IllegalArgumentException: Invalid read from JSON:
+    @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    @Valid
     private List<Menu> menus;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @JsonManagedReference(value = "restaurant-vote")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Vote> votes = new ArrayList<>();
+
+    public Restaurant(Integer id, String name) {
+        super(id, name);
+    }
 
     public Restaurant(Integer id, String name, List<Menu> menus) {
         super(id, name);

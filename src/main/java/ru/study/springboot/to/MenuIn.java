@@ -1,7 +1,9 @@
 package ru.study.springboot.to;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Value;
+import ru.study.springboot.model.AbstractBaseEntity;
 import ru.study.springboot.model.Meal;
 import ru.study.springboot.model.Menu;
 
@@ -11,7 +13,8 @@ import java.util.List;
 
 @Value
 @AllArgsConstructor
-public class MenuIn {
+@EqualsAndHashCode(callSuper = true)
+public class MenuIn extends AbstractBaseEntity {
     @NotNull
     String name;
     @NotNull
@@ -22,6 +25,6 @@ public class MenuIn {
     List<Meal> meals;
 
     public Menu toMenu() {
-        return new Menu(name, date, meals);
+        return new Menu(id, name, date, meals);
     }
 }
