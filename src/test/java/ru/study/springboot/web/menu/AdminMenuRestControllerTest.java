@@ -2,6 +2,7 @@ package ru.study.springboot.web.menu;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
+import ru.study.springboot.to.MenuIn;
 import ru.study.springboot.to.MenuOut;
 import ru.study.springboot.web.AbstractControllerTest;
 import ru.study.springboot.web.TestUtil;
@@ -148,15 +149,38 @@ class AdminMenuRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    //    @Test
-//    void checkMaxCountRestaurantCreateForUser() throws Exception {
-//        RestaurantOut restaurant = new RestaurantOut("newRestaurant");
-//        Integer countRestaurant = restaurantRepository.countByDate(LocalDate.now());
-//        ResultActions action = getMvcResultPost(ADMIN, restaurant);
-//        for (int i = countRestaurant; i <= MAX_COUNT_MEALS_FOR_MENU; i++) {
-//            new RestaurantOut("newRestaurant" + i);
-//            action = getMvcResultPost(ADMIN, restaurant);
-//        }
-//        action.andExpect(status().isUnprocessableEntity());
-//    }
+    @Test
+    void checkMNCountMealsCreateForAdminFailed() throws Exception {
+        getMvcResultPost(ADMIN, REST_URL_MENU_ADMIN, NEW_MENU_IN_MIN_VALID)
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void checkMaxCountMealsCreateForAdminFailed() throws Exception {
+        getMvcResultPost(ADMIN, REST_URL_MENU_ADMIN, NEW_MENU_IN_MAX_VALID)
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void checkNewMenuCreateFailed() throws Exception {
+        MenuIn menuIn = new MenuIn(NEW_MENU_IN.getName(), NEW_MENU_IN.getDate(), NEW_MENU_IN.getRestaurantId(), NEW_MENU_IN.getMeals());
+        menuIn.setId(2);
+        getMvcResultPost(ADMIN, REST_URL_MENU_ADMIN, menuIn)
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void checkAssureIdConsistentUpdateMenuFailed() throws Exception {
+        MenuIn menuIn = new MenuIn(NEW_MENU_IN.getName(), NEW_MENU_IN.getDate(), NEW_MENU_IN.getRestaurantId(), NEW_MENU_IN.getMeals());
+        menuIn.setId(1);
+        getMvcResultPut(ADMIN, REST_URL_MENU_ADMIN + "/" + 2, menuIn)
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void checkNotFoundWithIdRestaurantFailed() throws Exception {
+        MenuIn menuIn = new MenuIn(NEW_MENU_IN.getName(), NEW_MENU_IN.getDate(), 20, NEW_MENU_IN.getMeals());
+        getMvcResultPut(ADMIN, REST_URL_MENU_ADMIN + "/" + 2, menuIn)
+                .andExpect(status().isUnprocessableEntity());
+    }
 }

@@ -14,6 +14,13 @@ public class TestData {
     public static final User USER_NOT_REGISTRATION = new User(3, "user2@ya.ru", "user2", Role.USER);
     public static final MenuIn NEW_MENU_IN = new MenuIn("newMenu", LocalDate.now(), 1,
             List.of(new Meal("рагу", 300.0), new Meal("жареная индейка", 800.0)));
+    public static final MenuIn NEW_MENU_IN_MIN_VALID = new MenuIn("newMenu", LocalDate.now(), 1,
+            List.of(new Meal("рагу", 300.0)));
+    public static final MenuIn NEW_MENU_IN_MAX_VALID = new MenuIn("newMenu", LocalDate.now(), 1, List.of(
+            new Meal("рагу", 300.0), new Meal("жареная индейка", 800.0),
+            new Meal("рагу", 300.0), new Meal("жареная индейка", 800.0),
+            new Meal("рагу", 300.0), new Meal("жареная индейка", 800.0),
+            new Meal("рагу", 300.0), new Meal("жареная индейка", 800.0)));
 
     public static Menu menu1;
     public static List<Menu> menus = new ArrayList<>();
