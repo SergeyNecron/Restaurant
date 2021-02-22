@@ -29,8 +29,7 @@ public class RestaurantOut {
         this.name = restaurant.getName();
         this.address = restaurant.getAddress();
         this.rating = rating;
-        if (restaurant.getMenus().get(0).getMeals().size() > 0)
-            this.menus = restaurant.getMenus();
+        this.menus = restaurant.getMenus();
     }
 
     public RestaurantOut(Integer id, String name, String address) {

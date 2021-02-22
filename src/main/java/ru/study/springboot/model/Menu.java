@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "menu")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

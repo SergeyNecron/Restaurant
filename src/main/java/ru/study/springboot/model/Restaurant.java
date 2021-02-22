@@ -5,13 +5,15 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "restaurant")
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)

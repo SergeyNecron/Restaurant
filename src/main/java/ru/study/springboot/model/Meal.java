@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
-@Table(name = "meal")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
