@@ -10,14 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.study.springboot.dto.MenuIn;
+import ru.study.springboot.dto.MenuOut;
 import ru.study.springboot.error.IllegalRequestDataException;
 import ru.study.springboot.error.NotFoundException;
 import ru.study.springboot.model.Menu;
 import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.repository.MenuRepository;
 import ru.study.springboot.repository.RestaurantRepository;
-import ru.study.springboot.to.MenuIn;
-import ru.study.springboot.to.MenuOut;
 
 import javax.validation.Valid;
 import java.net.URI;

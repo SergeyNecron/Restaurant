@@ -3,16 +3,17 @@ package ru.study.springboot.service;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.study.springboot.dto.RestaurantIn;
 import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.repository.RestaurantRepository;
 import ru.study.springboot.repository.VoteRepository;
-import ru.study.springboot.to.RestaurantIn;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static ru.study.springboot.util.ValidationUtil.*;
+import static ru.study.springboot.util.ValidationUtil.checkNotDuplicate;
+import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
 public class RestaurantService {
@@ -45,7 +46,6 @@ public class RestaurantService {
     }
 
     public void update(RestaurantIn restaurantIn, int id) {
-        assureIdConsistent(restaurantIn, id); // restaurant.id == id ?
         Restaurant restaurant = checkNotFoundWithId(restaurantRepository.getById(id), id);
         restaurant.setName(restaurantIn.getName());
         restaurant.setAddress(restaurantIn.getAddress());

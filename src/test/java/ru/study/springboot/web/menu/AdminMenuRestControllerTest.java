@@ -2,8 +2,8 @@ package ru.study.springboot.web.menu;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
-import ru.study.springboot.to.MenuIn;
-import ru.study.springboot.to.MenuOut;
+import ru.study.springboot.dto.MenuIn;
+import ru.study.springboot.dto.MenuOut;
 import ru.study.springboot.web.AbstractControllerTest;
 import ru.study.springboot.web.TestUtil;
 
@@ -56,7 +56,7 @@ class AdminMenuRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isCreated())
                 .andReturn();
         MenuOut menusActual = TestUtil.readFromJsonMvcResult(action, MenuOut.class);
-        MenuOut expected = new MenuOut(NEW_MENU_IN);
+        MenuOut expected = new MenuOut(NEW_MENU_IN, 5);
         assertEquals(expected, menusActual);
     }
 
@@ -66,7 +66,7 @@ class AdminMenuRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
         MenuOut menusActual = TestUtil.readFromJsonMvcResult(getMvcResultGet(ADMIN, REST_URL_MENU_ADMIN + "/" + 1)
                 .andReturn(), MenuOut.class);
-        assertEquals(new MenuOut(NEW_MENU_IN), menusActual);
+        assertEquals(new MenuOut(NEW_MENU_IN, 1), menusActual);
     }
 
     @Test

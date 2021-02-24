@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import ru.study.springboot.model.AbstractBaseEntity;
+import ru.study.springboot.dto.BaseIn;
 import ru.study.springboot.model.User;
 import ru.study.springboot.util.JsonUtil;
 
@@ -39,16 +39,16 @@ public abstract class AbstractControllerTest {
         return getMvcResult(user, MockMvcRequestBuilders.put(url));
     }
 
-    protected ResultActions getMvcResultPost(User user, String url, AbstractBaseEntity entity) throws Exception {
+    protected ResultActions getMvcResultPost(User user, String url, BaseIn baseIn) throws Exception {
         return getMvcResult(user, MockMvcRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(entity)));
+                .content(JsonUtil.writeValue(baseIn)));
     }
 
-    protected ResultActions getMvcResultPut(User user, String url, AbstractBaseEntity entity) throws Exception {
+    protected ResultActions getMvcResultPut(User user, String url, BaseIn baseIn) throws Exception {
         return getMvcResult(user, MockMvcRequestBuilders.put(url)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(entity)));
+                .content(JsonUtil.writeValue(baseIn)));
     }
 
     protected ResultActions getMvcResultDelete(User user, String url) throws Exception {
