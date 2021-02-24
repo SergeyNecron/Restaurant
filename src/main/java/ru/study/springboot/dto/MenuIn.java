@@ -25,6 +25,6 @@ public class MenuIn extends AbstractBaseEntity {
     List<Meal> meals;
 
     public Menu toMenu() {
-        return new Menu(id, name, date, meals);
+        return new Menu(null, getName(), date, meals);
     }
 }

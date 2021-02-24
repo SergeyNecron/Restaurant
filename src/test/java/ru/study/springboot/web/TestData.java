@@ -1,7 +1,7 @@
 package ru.study.springboot.web;
 
+import ru.study.springboot.dto.MenuIn;
 import ru.study.springboot.model.*;
-import ru.study.springboot.to.MenuIn;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

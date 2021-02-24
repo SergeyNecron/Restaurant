@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import ru.study.springboot.dto.VoteOut;
 import ru.study.springboot.error.IllegalRequestDataException;
 import ru.study.springboot.model.User;
-import ru.study.springboot.to.VoteOut;
 import ru.study.springboot.web.TestUtil;
 import ru.study.springboot.web.restaurant.AbstractRestaurantControllerTest;
 

@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.study.springboot.AuthUser;
+import ru.study.springboot.dto.VoteOut;
 import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.model.User;
 import ru.study.springboot.model.Vote;
 import ru.study.springboot.repository.RestaurantRepository;
 import ru.study.springboot.repository.VoteRepository;
-import ru.study.springboot.to.VoteOut;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;

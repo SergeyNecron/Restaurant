@@ -4,8 +4,8 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
+import ru.study.springboot.dto.RestaurantOut;
 import ru.study.springboot.model.User;
-import ru.study.springboot.to.RestaurantOut;
 import ru.study.springboot.util.JsonUtil;
 
 import java.io.UnsupportedEncodingException;

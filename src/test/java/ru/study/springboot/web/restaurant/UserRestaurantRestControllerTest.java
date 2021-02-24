@@ -2,8 +2,8 @@ package ru.study.springboot.web.restaurant;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
+import ru.study.springboot.dto.RestaurantOut;
 import ru.study.springboot.model.User;
-import ru.study.springboot.to.RestaurantOut;
 import ru.study.springboot.web.TestUtil;
 
 import java.util.List;

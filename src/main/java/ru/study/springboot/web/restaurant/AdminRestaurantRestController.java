@@ -8,9 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.study.springboot.dto.RestaurantIn;
+import ru.study.springboot.dto.RestaurantOut;
 import ru.study.springboot.model.Restaurant;
-import ru.study.springboot.to.RestaurantIn;
-import ru.study.springboot.to.RestaurantOut;
 
 import javax.validation.Valid;
 import java.net.URI;

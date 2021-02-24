@@ -2,11 +2,11 @@ package ru.study.springboot.web.restaurant;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.study.springboot.dto.RestaurantIn;
+import ru.study.springboot.dto.RestaurantOut;
 import ru.study.springboot.error.NotFoundException;
 import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.service.RestaurantService;
-import ru.study.springboot.to.RestaurantIn;
-import ru.study.springboot.to.RestaurantOut;
 
 import java.time.LocalDate;
 import java.util.List;

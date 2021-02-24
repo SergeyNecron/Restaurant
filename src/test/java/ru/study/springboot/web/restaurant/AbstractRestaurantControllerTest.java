@@ -1,8 +1,8 @@
 package ru.study.springboot.web.restaurant;
 
 import org.springframework.test.web.servlet.ResultActions;
+import ru.study.springboot.dto.RestaurantIn;
 import ru.study.springboot.model.User;
-import ru.study.springboot.to.RestaurantIn;
 import ru.study.springboot.web.AbstractControllerTest;
 
 import java.time.LocalDate;

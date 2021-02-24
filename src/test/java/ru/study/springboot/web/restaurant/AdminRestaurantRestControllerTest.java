@@ -3,9 +3,9 @@ package ru.study.springboot.web.restaurant;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import ru.study.springboot.dto.RestaurantIn;
+import ru.study.springboot.dto.RestaurantOut;
 import ru.study.springboot.model.Restaurant;
-import ru.study.springboot.to.RestaurantIn;
-import ru.study.springboot.to.RestaurantOut;
 import ru.study.springboot.web.TestUtil;
 
 import java.time.LocalDate;
