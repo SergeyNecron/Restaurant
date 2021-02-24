@@ -25,7 +25,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.study.springboot.util.ValidationUtil.*;
+import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 
 @RestController
 @RequestMapping(value = AdminMenuRestController.REST_URL_MENU_ADMIN, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -71,7 +71,6 @@ public class AdminMenuRestController {
     @Transactional
     public ResponseEntity<MenuOut> createMenuWithMeals(@Valid @RequestBody MenuIn menuIn) {
         log.info("create menu: {} for restaurant {}", menuIn.getName(), menuIn.getRestaurantId());
-        checkNew(menuIn);
         final Menu menu = buildMenu(menuIn);
         MenuOut created = new MenuOut(menuRepository.save(menu));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -85,9 +84,9 @@ public class AdminMenuRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateMenuWithMeals(@Valid @RequestBody MenuIn menuIn, @PathVariable Integer id) {
         log.info("update {}", menuIn);
-        assureIdConsistent(menuIn, id); // menu.id == id ?
         checkNotFoundWithId(menuRepository.findById(id), id);
         final Menu menu = buildMenu(menuIn);
+        menu.setId(id);
         menuRepository.save(menu);
     }
 

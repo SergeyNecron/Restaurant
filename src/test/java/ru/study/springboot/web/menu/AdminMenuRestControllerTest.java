@@ -162,22 +162,6 @@ class AdminMenuRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void checkNewMenuCreateFailed() throws Exception {
-        MenuIn menuIn = new MenuIn(NEW_MENU_IN.getName(), NEW_MENU_IN.getDate(), NEW_MENU_IN.getRestaurantId(), NEW_MENU_IN.getMeals());
-        menuIn.setId(2);
-        getMvcResultPost(ADMIN, REST_URL_MENU_ADMIN, menuIn)
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    void checkAssureIdConsistentUpdateMenuFailed() throws Exception {
-        MenuIn menuIn = new MenuIn(NEW_MENU_IN.getName(), NEW_MENU_IN.getDate(), NEW_MENU_IN.getRestaurantId(), NEW_MENU_IN.getMeals());
-        menuIn.setId(1);
-        getMvcResultPut(ADMIN, REST_URL_MENU_ADMIN + "/" + 2, menuIn)
-                .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
     void checkNotFoundWithIdRestaurantFailed() throws Exception {
         MenuIn menuIn = new MenuIn(NEW_MENU_IN.getName(), NEW_MENU_IN.getDate(), 20, NEW_MENU_IN.getMeals());
         getMvcResultPut(ADMIN, REST_URL_MENU_ADMIN + "/" + 2, menuIn)

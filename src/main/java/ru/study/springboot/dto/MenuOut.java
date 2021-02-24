@@ -1,4 +1,4 @@
-package ru.study.springboot.to;
+package ru.study.springboot.dto;
 
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
