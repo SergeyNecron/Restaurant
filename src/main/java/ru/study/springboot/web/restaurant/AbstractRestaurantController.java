@@ -10,7 +10,6 @@ import ru.study.springboot.service.RestaurantService;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -21,8 +20,7 @@ public abstract class AbstractRestaurantController {
 
     public RestaurantOut get(Integer id) {
         log.info("get restaurant id = {}, with rating and menus", id);
-        final Optional<Restaurant> restaurant = restaurantService.get(id);
-        return toRatingRestaurant(restaurant
+        return toRatingRestaurant(restaurantService.get(id)
                 .orElseThrow(() -> new NotFoundException("RestaurantOut id=" + id + " not found")));
     }
 

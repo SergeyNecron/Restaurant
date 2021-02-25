@@ -83,7 +83,7 @@ public class AdminMenuRestController {
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateMenuWithMeals(@Valid @RequestBody MenuIn menuIn, @PathVariable Integer id) {
-        log.info("update {}", menuIn);
+        log.info("update menu: {}", menuIn);
         checkNotFoundWithId(menuRepository.findById(id), id);
         final Menu menu = buildMenu(menuIn);
         menu.setId(id);
@@ -94,7 +94,7 @@ public class AdminMenuRestController {
     @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMenuWithMeals(@PathVariable int id) {
-        log.info("delete {}", id);
+        log.info("delete menu: {}", id);
         menuRepository.deleteById(id);
         log.info("Menu id =" + id + " has been deleted");
     }

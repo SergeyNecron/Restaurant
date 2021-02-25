@@ -6,26 +6,25 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import ru.study.springboot.util.JsonDeserializers;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@ToString(callSuper = true, exclude = {"password"})
-public class User extends AbstractBaseEntity {
+@ToString(callSuper = true, exclude = {"password", "votes"})
+public class User extends AbstractNamedEntity {
 
     @Column(name = "email", nullable = false, unique = true)
     @Email
@@ -33,8 +32,9 @@ public class User extends AbstractBaseEntity {
     @Size(max = 128)
     private String email;
 
-    @Column(name = "password")
-    @Size(max = 256)
+    @Column(name = "password", nullable = false)
+    @NotBlank
+    @Size(min = 8, max = 256)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JsonDeserialize(using = JsonDeserializers.PasswordDeserializer.class)
     private String password;
@@ -57,8 +57,8 @@ public class User extends AbstractBaseEntity {
         this.roles = EnumSet.of(role, roles);
     }
 
-    public User(Integer id, String email, String password, Role role, Role... roles) {
-        super(id);
+    public User(Integer id, String name, String email, String password, Role role, Role... roles) {
+        super(id, name);
         this.email = email;
         this.password = password;
         this.roles = EnumSet.of(role, roles);
@@ -66,6 +66,10 @@ public class User extends AbstractBaseEntity {
 
     public void setEmail(String email) {
         this.email = StringUtils.hasText(email) ? email.toLowerCase() : null;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
     }
 
     @Override

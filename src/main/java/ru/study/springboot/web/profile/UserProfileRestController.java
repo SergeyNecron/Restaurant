@@ -1,4 +1,4 @@
-package ru.study.springboot.web;
+package ru.study.springboot.web.profile;
 
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
@@ -8,46 +8,34 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.study.springboot.AuthUser;
-import ru.study.springboot.model.Role;
 import ru.study.springboot.model.User;
 import ru.study.springboot.repository.UserRepository;
 import ru.study.springboot.util.ValidationUtil;
 
 import javax.validation.Valid;
-import java.net.URI;
-import java.util.List;
-import java.util.Set;
 
 @RestController
-@RequestMapping(value = ProfileRestController.REST_URL_USER, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = UserProfileRestController.REST_URL_PROFILE_USER, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 @Slf4j
-@Api(tags = "Profile Controller")
-public class ProfileRestController {
+@Api(tags = "User profile controller")
+public class UserProfileRestController {
 
-    static final String REST_URL_USER = "/rest/account";
+    static final String REST_URL_PROFILE_USER = "/rest/user/profile";
     private final UserRepository userRepository;
+
+    @GetMapping
+    public ResponseEntity<User> get(@AuthenticationPrincipal AuthUser authUser) {
+        log.info("get {}", authUser);
+        return ResponseEntity.of(userRepository.findById(authUser.id()));
+    }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
         log.info("delete {}", authUser);
         userRepository.deleteById(authUser.id());
-    }
-
-    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<User> register(@Valid @RequestBody User user) {
-        log.info("register {}", user);
-        ValidationUtil.checkNew(user);
-        user.setRoles(Set.of(Role.USER));
-        user = userRepository.save(user);
-        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/account")
-                .build().toUri();
-        return ResponseEntity.created(uriOfNewResource).body(user);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -61,11 +49,5 @@ public class ProfileRestController {
             user.setPassword(oldUser.getPassword());
         }
         userRepository.save(user);
-    }
-
-    @GetMapping
-    public List<User> getAll() {
-        log.info("getAll");
-        return userRepository.findAll();
     }
 }

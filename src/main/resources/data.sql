@@ -1,6 +1,6 @@
-INSERT INTO USERS (EMAIL, PASSWORD)
-VALUES ('user@ya.ru', '{noop}user'),
-       ('admin@ya.ru', '{noop}admin');
+INSERT INTO USERS (NAME, EMAIL, PASSWORD)
+VALUES ('user', 'user@ya.ru', '{noop}user'),
+       ('admin', 'admin@ya.ru', '{noop}admin');
 
 INSERT INTO USER_ROLE (ROLE, USER_ID)
 VALUES ('USER', 1),
