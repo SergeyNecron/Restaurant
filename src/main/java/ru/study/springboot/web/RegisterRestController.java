@@ -18,6 +18,8 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.Set;
 
+import static ru.study.springboot.util.ValidationUtil.checkNotDuplicate;
+
 @RestController
 @RequestMapping(value = RegisterRestController.REST_URL_REGISTER, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
@@ -31,6 +33,7 @@ public class RegisterRestController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<UserOut> register(@Valid @RequestBody UserIn userIn) {
         log.info("register {}", userIn);
+        checkNotDuplicate(userRepository.getByEmail(userIn.getEmail()), userIn.getEmail());
         User user = userIn.toUser();
         user.setRoles(Set.of(Role.USER));
         user = userRepository.save(user);
