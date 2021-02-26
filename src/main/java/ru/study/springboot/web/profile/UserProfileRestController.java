@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.study.springboot.AuthUser;
+import ru.study.springboot.error.IllegalRequestDataException;
 import ru.study.springboot.model.User;
 import ru.study.springboot.repository.UserRepository;
 import ru.study.springboot.util.ValidationUtil;
@@ -34,6 +35,7 @@ public class UserProfileRestController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
+        if (authUser.id() == 1) throw new IllegalRequestDataException("must not delete admin with id = 1");
         log.info("delete {}", authUser);
         userRepository.deleteById(authUser.id());
     }

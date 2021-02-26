@@ -9,12 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.study.springboot.dto.UserIn;
+import ru.study.springboot.error.IllegalRequestDataException;
 import ru.study.springboot.model.User;
 import ru.study.springboot.repository.UserRepository;
 
 import javax.validation.Valid;
 import java.util.List;
 
+import static ru.study.springboot.util.ValidationUtil.checkNotDuplicate;
 import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 
 @RestController
@@ -44,6 +46,7 @@ public class AdminProfileRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody UserIn userIn, @PathVariable Integer id) {
         log.info("update {} ", userIn);
+        checkNotDuplicate(userRepository.getByEmail(userIn.getEmail()), userIn.getEmail());
         User user = checkNotFoundWithId(userRepository.findById(id), id);
         user.setEmail(userIn.getEmail());
         user.setRoles(userIn.getRoles());
@@ -58,6 +61,7 @@ public class AdminProfileRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("delete user id = {}", id);
+        if (id == 1) throw new IllegalRequestDataException("must not delete admin with id = 1");
         userRepository.deleteById(id);
         log.info("User id =" + id + " has been deleted");
     }

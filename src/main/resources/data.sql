@@ -1,10 +1,10 @@
 INSERT INTO USERS (NAME, EMAIL, PASSWORD)
-VALUES ('user', 'user@ya.ru', '{noop}user'),
-       ('admin', 'admin@ya.ru', '{noop}admin');
+VALUES ('admin', 'admin@ya.ru', '{noop}admin'),
+       ('user', 'user@ya.ru', '{noop}user');
 
 INSERT INTO USER_ROLE (ROLE, USER_ID)
 VALUES ('USER', 1),
-       ('ADMIN', 2),
+       ('ADMIN', 1),
        ('USER', 2);
 
 INSERT INTO RESTAURANT (NAME, ID)

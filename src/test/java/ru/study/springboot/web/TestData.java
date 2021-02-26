@@ -9,8 +9,8 @@ import java.util.List;
 
 public class TestData {
 
-    public static final User ADMIN = new User(2, "admin", "admin@ya.ru", "admin", Role.USER, Role.ADMIN);
-    public static final User USER = new User(1, "user", "user@ya.ru", "user", Role.USER);
+    public static final User ADMIN = new User(1, "admin", "admin@ya.ru", "admin", Role.USER, Role.ADMIN);
+    public static final User USER = new User(2, "user", "user@ya.ru", "user", Role.USER);
     public static final User USER_NOT_REGISTRATION = new User(3, "user", "user2@ya.ru", "user2", Role.USER);
     public static final MenuIn NEW_MENU_IN = new MenuIn("newMenu", LocalDate.now(), 1,
             List.of(new Meal("рагу", 300.0), new Meal("жареная индейка", 800.0)));
