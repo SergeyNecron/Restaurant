@@ -16,13 +16,11 @@ import java.util.Set;
 public class UserOut extends BaseOut {
 
     String email;
-    String password;
     Set<Role> roles;
 
     public UserOut(User user) {
         super(user.id(), user.getName());
         this.email = user.getEmail();
-        this.password = user.getPassword();
         this.roles = user.getRoles();
     }
 }

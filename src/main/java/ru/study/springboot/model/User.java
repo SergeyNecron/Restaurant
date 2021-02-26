@@ -51,17 +51,19 @@ public class User extends AbstractNamedEntity {
     @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
     private List<Vote> votes;
 
-    public User(String email, String password, Role role, Role... roles) {
-        this.email = email;
-        this.password = password;
-        this.roles = EnumSet.of(role, roles);
+    public User(String name, String email, String password, Set<Role> roles) {
+        this(null, name, email, password, roles);
     }
 
     public User(Integer id, String name, String email, String password, Role role, Role... roles) {
+        this(id, name, email, password, EnumSet.of(role, roles));
+    }
+
+    public User(Integer id, String name, String email, String password, Set<Role> roles) {
         super(id, name);
         this.email = email;
         this.password = password;
-        this.roles = EnumSet.of(role, roles);
+        this.roles = roles;
     }
 
     public void setEmail(String email) {
