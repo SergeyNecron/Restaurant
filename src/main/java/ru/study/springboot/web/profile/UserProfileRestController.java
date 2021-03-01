@@ -9,11 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.study.springboot.AuthUser;
-import ru.study.springboot.error.IllegalRequestDataException;
-import ru.study.springboot.model.User;
-import ru.study.springboot.repository.UserRepository;
-import ru.study.springboot.util.ValidationUtil;
-
+import ru.study.springboot.dto.UserIn;
+import ru.study.springboot.dto.UserOut;
 import javax.validation.Valid;
 
 @RestController
@@ -21,35 +18,24 @@ import javax.validation.Valid;
 @AllArgsConstructor
 @Slf4j
 @Api(tags = "User profile controller")
-public class UserProfileRestController {
+public class UserProfileRestController extends AbstractUserController{
 
     static final String REST_URL_PROFILE_USER = "/rest/user/profile";
-    private final UserRepository userRepository;
 
     @GetMapping
-    public ResponseEntity<User> get(@AuthenticationPrincipal AuthUser authUser) {
-        log.info("get {}", authUser);
-        return ResponseEntity.of(userRepository.findById(authUser.id()));
+    public ResponseEntity<UserOut> get(@AuthenticationPrincipal AuthUser authUser) {
+        return ResponseEntity.ok(get(authUser.id()));
+    }
+
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@Valid @RequestBody UserIn userIn, @AuthenticationPrincipal AuthUser authUser) {
+        update(userIn, authUser.id());
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
-        if (authUser.id() == 1) throw new IllegalRequestDataException("must not delete admin with id = 1");
-        log.info("delete {}", authUser);
-        userRepository.deleteById(authUser.id());
-    }
-
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody User user, @AuthenticationPrincipal AuthUser authUser) {
-        log.info("update {} to {}", authUser, user);
-        User oldUser = authUser.getUser();
-        ValidationUtil.assureIdConsistent(user, oldUser.id());
-        user.setRoles(oldUser.getRoles());
-        if (user.getPassword() == null) {
-            user.setPassword(oldUser.getPassword());
-        }
-        userRepository.save(user);
+        delete(authUser.id());
     }
 }

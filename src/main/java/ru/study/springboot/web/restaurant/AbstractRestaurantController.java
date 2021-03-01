@@ -7,7 +7,6 @@ import ru.study.springboot.dto.RestaurantOut;
 import ru.study.springboot.error.NotFoundException;
 import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.service.RestaurantService;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +45,7 @@ public abstract class AbstractRestaurantController {
     public void delete(int id) {
         log.info("delete {}", id);
         restaurantService.delete(id);
-        log.info("Restaurant id =" + id + " has been deleted");
+        log.info("Restaurant id = " + id + " has been deleted");
     }
 
     private RestaurantOut toRatingRestaurant(Restaurant restaurant) {

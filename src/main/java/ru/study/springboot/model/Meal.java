@@ -1,12 +1,8 @@
 package ru.study.springboot.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.validator.constraints.Range;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
@@ -15,6 +11,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(callSuper = true, exclude = {"menu"})
 public class Meal extends AbstractNamedEntity {
 
     @Column(name = "price", nullable = false)
@@ -47,12 +44,4 @@ public class Meal extends AbstractNamedEntity {
         return Objects.hash(super.hashCode(), getPrice());
     }
 
-    @Override
-    public String toString() {
-        return "{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                '}';
-    }
 }

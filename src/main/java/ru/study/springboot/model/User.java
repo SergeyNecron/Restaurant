@@ -21,7 +21,7 @@ import java.util.*;
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_idx")})
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true, exclude = {"password", "votes"})
 public class User extends AbstractNamedEntity {

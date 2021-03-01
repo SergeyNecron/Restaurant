@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.study.springboot.model.Role;
 import ru.study.springboot.model.User;
 import ru.study.springboot.util.JsonDeserializers;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -27,6 +27,7 @@ public class UserIn extends BaseIn {
     @JsonDeserialize(using = JsonDeserializers.PasswordDeserializer.class)
     private String password;
 
+    @Setter
     private Set<Role> roles;
 
     public User toUser() {

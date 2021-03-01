@@ -18,13 +18,11 @@ import ru.study.springboot.model.Menu;
 import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.repository.MenuRepository;
 import ru.study.springboot.repository.RestaurantRepository;
-
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 
 @RestController
@@ -96,7 +94,7 @@ public class AdminMenuRestController {
     public void deleteMenuWithMeals(@PathVariable int id) {
         log.info("delete menu: {}", id);
         menuRepository.deleteById(id);
-        log.info("Menu id =" + id + " has been deleted");
+        log.info("Menu id = " + id + " has been deleted");
     }
 
     private Menu buildMenu(MenuIn menuIn) {
