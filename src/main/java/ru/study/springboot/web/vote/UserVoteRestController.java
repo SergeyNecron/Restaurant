@@ -45,15 +45,19 @@ public class UserVoteRestController {
     public ResponseEntity<VoteOut> saveOrUpdateOnDate(User user, int restaurantId, LocalDateTime dateTime) {
         Optional<Vote> vote = voteRepository.getVoteByDateAndUser(dateTime.toLocalDate(), user);
         Restaurant restaurant = checkNotFoundWithId(restaurantRepository.getById(restaurantId), restaurantId);
-        VoteOut voteOut = vote.isEmpty() ?
-                new VoteOut(voteRepository.save(new Vote(dateTime.toLocalDate(), user, restaurant)), true)
-                : new VoteOut(update(vote.get(), dateTime.toLocalTime(), restaurant), false);
-        log.info("{}, vote: date = {}, user_id = {}, restaurant_id = {}",
-                voteOut.getAction(), voteOut.getDate(), voteOut.getUserId(), voteOut.getRestaurantId());
+        VoteOut voteOut;
+        if (vote.isEmpty()) {
+            voteOut = new VoteOut(voteRepository.save(new Vote(dateTime.toLocalDate(), user, restaurant)));
+            log.info("create vote: date = {}, user_id = {}, restaurant_id = {}",
+                    voteOut.getDate(), voteOut.getUserId(), voteOut.getRestaurantId());
+        } else voteOut = new VoteOut(update(vote.get(), dateTime.toLocalTime(), restaurant));
+
         return ResponseEntity.ok(voteOut);
     }
 
     private Vote update(Vote vote, LocalTime time, Restaurant restaurant) {
+        log.info("update vote: id = {}, date = {}, restaurant_id = {}",
+                vote.getUser(), vote.getDate(), restaurant.id());
         checkReVote(time);
         checkNotDuplicate(vote.getRestaurant().id(), restaurant.id());
         vote.setRestaurant(restaurant);

@@ -7,6 +7,7 @@ import ru.study.springboot.dto.RestaurantOut;
 import ru.study.springboot.error.NotFoundException;
 import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.service.RestaurantService;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,15 +20,16 @@ public abstract class AbstractRestaurantController {
 
     public RestaurantOut get(Integer id) {
         log.info("get restaurant id = {}, with rating and menus", id);
-        return toRatingRestaurant(restaurantService.get(id)
-                .orElseThrow(() -> new NotFoundException("RestaurantOut id=" + id + " not found")));
+        final Restaurant restaurant = restaurantService.get(id)
+                .orElseThrow(() -> new NotFoundException("RestaurantOut id=" + id + " not found"));
+        return new RestaurantOut(restaurant, getRatingRestaurantByDateNow(restaurant));
     }
 
     public List<RestaurantOut> getAll(LocalDate date) {
         log.info("get all restaurants with rating and menus by date {}", date);
         return restaurantService.getAll(date)
                 .stream()
-                .map(this::toRatingRestaurant)
+                .map(it -> new RestaurantOut(it, getRatingRestaurantByDateNow(it)))
                 .collect(Collectors.toList());
     }
 
@@ -48,8 +50,10 @@ public abstract class AbstractRestaurantController {
         log.info("Restaurant id = " + id + " has been deleted");
     }
 
-    private RestaurantOut toRatingRestaurant(Restaurant restaurant) {
-        Integer rating = restaurantService.getRating(restaurant.id(), LocalDate.now());
-        return new RestaurantOut(restaurant, rating);
+    private int getRatingRestaurantByDateNow(Restaurant restaurant) {
+        return (int) restaurant.getVotes()
+                .stream()
+                .filter(it -> it.getDate().equals(LocalDate.now()))
+                .count();
     }
 }

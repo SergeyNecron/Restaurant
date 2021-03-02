@@ -20,13 +20,10 @@ public class VoteOut {
     private LocalDate date;
     @NotNull
     private Integer restaurantId;
-    @NotNull
-    private String action;
 
-    public VoteOut(Vote vote, boolean action) {
+    public VoteOut(Vote vote) {
         this.userId = vote.id();
         this.date = vote.getDate();
         this.restaurantId = vote.getRestaurant().id();
-        this.action = action ? "create" : "update";
     }
 }

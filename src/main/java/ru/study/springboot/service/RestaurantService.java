@@ -29,7 +29,10 @@ public class RestaurantService {
     @Transactional
     public Optional<Restaurant> get(Integer id) {
         final Optional<Restaurant> restaurant = restaurantRepository.findById(id);
-        restaurant.ifPresent(value -> Hibernate.initialize(value.getMenus().get(0).getMeals()));
+        restaurant.ifPresent(value -> {
+            Hibernate.initialize(value.getMenus().get(0).getMeals());
+            Hibernate.initialize(value.getVotes());
+        });
         return restaurant;
     }
 
@@ -37,6 +40,7 @@ public class RestaurantService {
     public List<Restaurant> getAll(LocalDate date) {
         List<Restaurant> restaurants = restaurantRepository.getAllRestaurantsWithMenuOnDate(date);
         Hibernate.initialize(restaurants.get(0).getMenus().get(0).getMeals());
+        Hibernate.initialize(restaurants.get(0).getVotes());
         return restaurants;
     }
 
@@ -54,9 +58,5 @@ public class RestaurantService {
 
     public void delete(int id) {
         restaurantRepository.deleteById(id);
-    }
-
-    public Integer getRating(int id, LocalDate date) {
-        return voteRepository.getCountVoteByDateForRestaurant(id, date);
     }
 }
