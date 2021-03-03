@@ -4,9 +4,9 @@ import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.study.springboot.dto.RestaurantIn;
+import ru.study.springboot.model.Menu;
 import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.repository.RestaurantRepository;
-import ru.study.springboot.repository.VoteRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,19 +18,17 @@ import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 @Service
 public class RestaurantService {
 
-    private final VoteRepository voteRepository;
     private final RestaurantRepository restaurantRepository;
 
-    public RestaurantService(RestaurantRepository restaurantRepository, VoteRepository voteRepository) {
+    public RestaurantService(RestaurantRepository restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
-        this.voteRepository = voteRepository;
     }
 
     @Transactional
     public Optional<Restaurant> get(Integer id) {
         final Optional<Restaurant> restaurant = restaurantRepository.findById(id);
         restaurant.ifPresent(value -> {
-            Hibernate.initialize(value.getMenus().get(0).getMeals());
+            ifMenuIsPresetThenInitializeMenu(value);
             Hibernate.initialize(value.getVotes());
         });
         return restaurant;
@@ -39,9 +37,16 @@ public class RestaurantService {
     @Transactional
     public List<Restaurant> getAll(LocalDate date) {
         List<Restaurant> restaurants = restaurantRepository.getAllRestaurantsWithMenuOnDate(date);
-        Hibernate.initialize(restaurants.get(0).getMenus().get(0).getMeals());
-        Hibernate.initialize(restaurants.get(0).getVotes());
+        if (restaurants.size() != 0) {
+            ifMenuIsPresetThenInitializeMenu(restaurants.get(0));
+            Hibernate.initialize(restaurants.get(0).getVotes());
+        }
         return restaurants;
+    }
+
+    private void ifMenuIsPresetThenInitializeMenu(Restaurant restaurants) {
+        List<Menu> menus = restaurants.getMenus();
+        if (menus.size() != 0) Hibernate.initialize(menus.get(0).getMeals());
     }
 
     public Restaurant create(Restaurant restaurant) {
@@ -50,7 +55,7 @@ public class RestaurantService {
     }
 
     public void update(RestaurantIn restaurantIn, int id) {
-        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.getById(id), id);
+        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.findById(id), id);
         restaurant.setName(restaurantIn.getName());
         restaurant.setAddress(restaurantIn.getAddress());
         restaurantRepository.save(restaurant);

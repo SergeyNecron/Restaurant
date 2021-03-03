@@ -9,6 +9,7 @@ import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.web.TestUtil;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,6 +32,15 @@ class AdminRestaurantRestControllerTest extends AbstractRestaurantControllerTest
                 .andReturn();
         List<RestaurantOut> restaurantsActual = TestUtil.readListFromJsonMvcResult(action, RestaurantOut.class);
         assertEquals(getTestRestaurantsTo(), restaurantsActual);
+    }
+
+    @Test
+    void getAllRestaurantsWithMenuByErrorDateForUserFailed() throws Exception {
+        MvcResult action = getMvcResultGet(ADMIN, LocalDate.MIN)
+                .andExpect(status().isOk())
+                .andReturn();
+        List<RestaurantOut> restaurantsActual = TestUtil.readListFromJsonMvcResult(action, RestaurantOut.class);
+        assertEquals(new ArrayList<>(), restaurantsActual);
     }
 
     @Test

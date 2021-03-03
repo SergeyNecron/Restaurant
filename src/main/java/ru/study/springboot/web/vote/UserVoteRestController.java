@@ -44,7 +44,7 @@ public class UserVoteRestController {
 
     public ResponseEntity<VoteOut> saveOrUpdateOnDate(User user, int restaurantId, LocalDateTime dateTime) {
         Optional<Vote> vote = voteRepository.getVoteByDateAndUser(dateTime.toLocalDate(), user);
-        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.getById(restaurantId), restaurantId);
+        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.findById(restaurantId), restaurantId);
         VoteOut voteOut;
         if (vote.isEmpty()) {
             voteOut = new VoteOut(voteRepository.save(new Vote(dateTime.toLocalDate(), user, restaurant)));

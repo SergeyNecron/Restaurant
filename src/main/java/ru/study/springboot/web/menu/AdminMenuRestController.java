@@ -18,11 +18,13 @@ import ru.study.springboot.model.Menu;
 import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.repository.MenuRepository;
 import ru.study.springboot.repository.RestaurantRepository;
+
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 
 @RestController
@@ -100,7 +102,7 @@ public class AdminMenuRestController {
     private Menu buildMenu(MenuIn menuIn) {
         final Menu menu = menuIn.toMenu();
         checkCountMealsValid(menu);
-        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.getById(menuIn.getRestaurantId()), menuIn.getRestaurantId());
+        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.findById(menuIn.getRestaurantId()), menuIn.getRestaurantId());
         menu.setRestaurant(restaurant);
         menu.getMeals().forEach(it -> it.setMenu(menu));
         return menu;

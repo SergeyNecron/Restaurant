@@ -14,14 +14,8 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     Optional<Restaurant> getByName(String name);
 
-    Optional<Restaurant> getById(Integer id);
-
-    List<Restaurant> findAll();
-
     @Query("SELECT r FROM Restaurant r " +
             "LEFT JOIN FETCH r.menus m " +
             "WHERE m.date = :date")
     List<Restaurant> getAllRestaurantsWithMenuOnDate(LocalDate date);
-
-
 }
