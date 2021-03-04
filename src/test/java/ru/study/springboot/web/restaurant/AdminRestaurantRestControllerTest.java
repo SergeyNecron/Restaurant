@@ -56,7 +56,7 @@ class AdminRestaurantRestControllerTest extends AbstractRestaurantControllerTest
     }
 
     @Test
-    void checkCreateRestaurantForAdmin() throws Exception {
+    void createRestaurantForAdmin() throws Exception {
         RestaurantIn restaurantIn = new RestaurantIn("newRestaurant");
         ResultActions action = getMvcResultPost(ADMIN, restaurantIn);
         action.andExpect(status().isCreated());

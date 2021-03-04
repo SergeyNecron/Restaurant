@@ -10,24 +10,25 @@ import ru.study.springboot.error.NotFoundException;
 import ru.study.springboot.model.Role;
 import ru.study.springboot.model.User;
 import ru.study.springboot.repository.UserRepository;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import static ru.study.springboot.util.ValidationUtil.checkNotDuplicate;
 import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 
 @Slf4j
-public abstract class AbstractUserController {
+public abstract class AbstractProfileController {
 
     @Autowired
-    private  UserRepository userRepository;
+    private UserRepository userRepository;
 
     public UserOut get(int id) {
         log.info("get user id = {}", id);
         return new UserOut(userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("user id = " + id + " not found")));
     }
-
 
     public List<UserOut> getAll() {
         log.info("get all users");
@@ -43,7 +44,7 @@ public abstract class AbstractUserController {
         log.info("register {}", userIn);
         checkNotDuplicate(userRepository.getByEmail(userIn.getEmail()), userIn.getEmail());
         User user = new User();
-        userIn.setRoles(Set.of(Role.USER));
+        userIn.setRoles(Set.of(Role.USER));// при создании всегда роль User
         updateUserFromUserDto(user, userIn);
         return userRepository.save(user);
     }
@@ -55,9 +56,8 @@ public abstract class AbstractUserController {
         User user = checkNotFoundWithId(userRepository.findById(id), id);
         updateUserFromUserDto(user, userIn);
         userRepository.save(user);
-        log.info("User id =" + id + " has been update");
+        log.info("User id = " + id + " has been update");
     }
-
 
     @Transactional
     public void delete(int id) {
@@ -70,8 +70,9 @@ public abstract class AbstractUserController {
     private void updateUserFromUserDto(User user, UserIn userIn) {
         user.setName(userIn.getName());
         user.setEmail(userIn.getEmail());
-        user.setRoles(userIn.getRoles());
-        if (user.getPassword() == null) {
+        if (userIn.getRoles() != null)
+            user.setRoles(userIn.getRoles());
+        if (userIn.getPassword() != null) {
             user.setPassword(userIn.getPassword());
         }
     }

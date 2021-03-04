@@ -45,6 +45,13 @@ public abstract class AbstractControllerTest {
                 .content(JsonUtil.writeValue(baseIn)));
     }
 
+    protected ResultActions getMvcResultPost(String url, BaseIn baseIn) throws Exception {
+        return perform(MockMvcRequestBuilders.post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(baseIn)))
+                .andDo(print());
+    }
+
     protected ResultActions getMvcResultPut(User user, String url, BaseIn baseIn) throws Exception {
         return getMvcResult(user, MockMvcRequestBuilders.put(url)
                 .contentType(MediaType.APPLICATION_JSON)

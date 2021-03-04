@@ -8,6 +8,7 @@ import lombok.Setter;
 import ru.study.springboot.model.Role;
 import ru.study.springboot.model.User;
 import ru.study.springboot.util.JsonDeserializers;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -23,14 +24,20 @@ public class UserIn extends BaseIn {
 
     @NotEmpty
     @Size(max = 256)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     @JsonDeserialize(using = JsonDeserializers.PasswordDeserializer.class)
     private String password;
 
+    public UserIn(String name, String email, String password) {
+        this.setName(name);
+        this.email = email;
+        this.password = password;
+    }
+
+    public UserIn(User user) {
+        this(user.getName(), user.getEmail(), user.getPassword());
+    }
+
     @Setter
     private Set<Role> roles;
-
-    public User toUser() {
-        return new User(getName(), email, password, roles);
-    }
 }

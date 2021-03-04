@@ -1,6 +1,7 @@
 package ru.study.springboot.web;
 
 import ru.study.springboot.dto.MenuIn;
+import ru.study.springboot.dto.UserIn;
 import ru.study.springboot.model.*;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ public class TestData {
     public static final User ADMIN = new User(1, "admin", "admin@ya.ru", "admin", Role.USER, Role.ADMIN);
     public static final User USER = new User(2, "user", "user@ya.ru", "user", Role.USER);
     public static final User USER_NOT_REGISTRATION = new User(3, "user", "user2@ya.ru", "user2", Role.USER);
+    public static final UserIn USER_NEW_IN = new UserIn("newUser", "newuser1@ya.ru", "password1");
     public static final MenuIn NEW_MENU_IN = new MenuIn("newMenu", LocalDate.now(), 1,
             List.of(new Meal("рагу", 300.0), new Meal("жареная индейка", 800.0)));
     public static final MenuIn NEW_MENU_IN_MIN_VALID = new MenuIn("newMenu", LocalDate.now(), 1,

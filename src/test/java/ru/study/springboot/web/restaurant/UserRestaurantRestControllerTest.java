@@ -16,7 +16,7 @@ import static ru.study.springboot.web.TestUtil.getTestRestaurantsTo;
 class UserRestaurantRestControllerTest extends AbstractRestaurantControllerTest {
 
     @Test
-    void getRestaurantWithRatingAndMenusNowUser() throws Exception {
+    void getRestaurantWithRatingAndMenusNowForUser() throws Exception {
         get(USER, 1);
     }
 

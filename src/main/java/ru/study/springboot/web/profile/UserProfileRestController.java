@@ -11,14 +11,17 @@ import org.springframework.web.bind.annotation.*;
 import ru.study.springboot.AuthUser;
 import ru.study.springboot.dto.UserIn;
 import ru.study.springboot.dto.UserOut;
+import ru.study.springboot.model.Role;
+
 import javax.validation.Valid;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = UserProfileRestController.REST_URL_PROFILE_USER, produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 @Slf4j
 @Api(tags = "User profile controller")
-public class UserProfileRestController extends AbstractUserController{
+public class UserProfileRestController extends AbstractProfileController {
 
     static final String REST_URL_PROFILE_USER = "/rest/user/profile";
 
@@ -30,6 +33,9 @@ public class UserProfileRestController extends AbstractUserController{
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody UserIn userIn, @AuthenticationPrincipal AuthUser authUser) {
+        final Set<Role> userRoles = authUser.getUser().getRoles();
+        if (!userRoles.contains(Role.ADMIN))
+            userIn.setRoles(userRoles); // User не может поменять свою роль, только админ
         update(userIn, authUser.id());
     }
 
