@@ -21,7 +21,7 @@ public abstract class AbstractRestaurantController {
     public RestaurantOut get(Integer id) {
         log.info("get restaurant id = {}, with rating and menus", id);
         final Restaurant restaurant = restaurantService.get(id)
-                .orElseThrow(() -> new NotFoundException("RestaurantOut id=" + id + " not found"));
+                .orElseThrow(() -> new NotFoundException("RestaurantOut id = " + id + " not found"));
         return new RestaurantOut(restaurant, getRatingRestaurantByDateNow(restaurant));
     }
 
@@ -41,7 +41,7 @@ public abstract class AbstractRestaurantController {
     public void update(RestaurantIn restaurantIn, int id) {
         log.info("update restaurant: {}", restaurantIn);
         restaurantService.update(restaurantIn, id);
-        log.info("Restaurant id =" + id + " has been update");
+        log.info("Restaurant id = " + id + " has been update");
     }
 
     public void delete(int id) {

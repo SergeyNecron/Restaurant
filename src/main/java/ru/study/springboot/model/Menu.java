@@ -67,10 +67,10 @@ public class Menu extends AbstractNamedEntity {
     @Override
     public String toString() {
         return "{" +
-                "id=" + id +
-                ", name=" + name +
-                ", date=" + date +
-                ", meals=" + meals +
+                "id = " + id +
+                ", name= " + name +
+                ", date= " + date +
+                ", meals= " + meals +
                 '}';
     }
 }

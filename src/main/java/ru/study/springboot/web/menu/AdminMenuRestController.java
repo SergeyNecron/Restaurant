@@ -3,6 +3,9 @@ package ru.study.springboot.web.menu;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,6 +35,7 @@ import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 @Slf4j
 @AllArgsConstructor
 @Api(tags = "Admin menu controller")
+@CacheConfig(cacheNames = {"restaurants", "menus", "menus-by-date"})
 public class AdminMenuRestController {
     static final String REST_URL_MENU_ADMIN = "/rest/admin/menu";
     static final Integer MIN_COUNT_MEALS_FOR_MENU = 2;
@@ -43,32 +47,34 @@ public class AdminMenuRestController {
     @GetMapping("/{id}")
     public ResponseEntity<MenuOut> getMenuWithMeals(@PathVariable int id) {
         log.info("get menu {}", id);
-        return ResponseEntity.ok(new MenuOut(menuRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("restaurant id= " + id + " not found"))));
+        return ResponseEntity.ok(new MenuOut(menuRepository.get(id)
+                .orElseThrow(() -> new NotFoundException("restaurant id = " + id + " not found"))));
     }
 
     @GetMapping
+    @Cacheable(cacheNames = "menus")
     public List<MenuOut> getAllMenusWithMeals() {
         log.info("getAll");
         return menuRepository
-                .findAll()
+                .getAll()
                 .stream()
                 .map(MenuOut::new)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/date/{date}")
+    @Cacheable(cacheNames = "menus-by-date")
     public List<MenuOut> getAllMenusWithMealsByDate(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("get menus by date {}", date);
         return menuRepository
-                .findAllByDate(date)
+                .getAllByDate(date)
                 .stream()
                 .map(MenuOut::new)
                 .collect(Collectors.toList());
     }
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
+    @CacheEvict(allEntries = true)
     public ResponseEntity<MenuOut> createMenuWithMeals(@Valid @RequestBody MenuIn menuIn) {
         log.info("create menu: {} for restaurant {}", menuIn.getName(), menuIn.getRestaurantId());
         final Menu menu = buildMenu(menuIn);
@@ -81,6 +87,7 @@ public class AdminMenuRestController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
+    @CacheEvict(allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateMenuWithMeals(@Valid @RequestBody MenuIn menuIn, @PathVariable Integer id) {
         log.info("update menu: {}", menuIn);
@@ -92,6 +99,7 @@ public class AdminMenuRestController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @CacheEvict(allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMenuWithMeals(@PathVariable int id) {
         log.info("delete menu: {}", id);

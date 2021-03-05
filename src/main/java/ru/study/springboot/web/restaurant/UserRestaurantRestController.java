@@ -1,6 +1,8 @@
 package ru.study.springboot.web.restaurant;
 
 import io.swagger.annotations.Api;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @RestController
 @Api(tags = "User restaurant controller")
+@CacheConfig(cacheNames = "restaurants")
 @RequestMapping(value = UserRestaurantRestController.REST_URL_RESTAURANT_USER)
 public class UserRestaurantRestController extends AbstractRestaurantController {
     static final String REST_URL_RESTAURANT_USER = "/rest/user/restaurant";
@@ -23,6 +26,7 @@ public class UserRestaurantRestController extends AbstractRestaurantController {
     }
 
     @GetMapping
+    @Cacheable
     public List<RestaurantOut> getAllRestaurantsWithMenuNow() {
         return getAll(LocalDate.now());
     }

@@ -20,7 +20,6 @@ public class Restaurant extends AbstractNamedEntity {
 
     private String address;
 
-    //  fix: java.lang.IllegalArgumentException: Invalid read from JSON:
     @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
@@ -53,11 +52,16 @@ public class Restaurant extends AbstractNamedEntity {
 
     @Override
     public String toString() {
-        return "Restaurant{" +
-                "  id=" + id +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", menus=" + menus +
+        return "Restaurant {" +
+                "  id = " + id +
+                ", name = " + name +
+                ", address = " + address +
+                ", menus = " + menus +
                 '}';
+    }
+
+    public void addMenus(Menu menu) {
+        if (menus == null) menus = new ArrayList<>();
+        menus.add(menu);
     }
 }

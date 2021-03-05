@@ -3,6 +3,8 @@ package ru.study.springboot.web.profile;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +26,13 @@ import java.util.Set;
 @AllArgsConstructor
 @Slf4j
 @Api(tags = "User profile controller")
+@CacheConfig(cacheNames = "users")
 public class UserProfileRestController extends AbstractProfileController {
 
     static final String REST_URL_PROFILE_USER = "/rest/user/profile";
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @CacheEvict(allEntries = true)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<UserOut> register(@Valid @RequestBody UserIn userIn) {
         User created = create(userIn);
@@ -44,6 +48,7 @@ public class UserProfileRestController extends AbstractProfileController {
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @CacheEvict(allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@Valid @RequestBody UserIn userIn, @AuthenticationPrincipal AuthUser authUser) {
         final Set<Role> userRoles = authUser.getUser().getRoles();
@@ -53,6 +58,7 @@ public class UserProfileRestController extends AbstractProfileController {
     }
 
     @DeleteMapping
+    @CacheEvict(allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
         delete(authUser.id());

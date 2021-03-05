@@ -20,13 +20,18 @@ spring:
     password:
   h2.console.enabled: true
 
-    # Jackson Serialization Issue Resolver
+  # Jackson Serialization Issue Resolver
   jackson:
     visibility:
       field: any
       getter: none
       setter: none
       is-getter: none
+
+  # https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties-cache
+  cache:
+    cache-names: users, restaurants, menus, menus-by-date
+    caffeine.spec: maximumSize=1,expireAfterAccess=60s
 
 server.servlet:
   encoding:

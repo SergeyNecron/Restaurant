@@ -14,7 +14,7 @@ public class ValidationUtil {
 
     public static void checkNew(AbstractBaseEntity entity) {
         if (!entity.isNew()) {
-            throw new IllegalRequestDataException(entity.getClass().getSimpleName() + " must be new (id=null)");
+            throw new IllegalRequestDataException(entity.getClass().getSimpleName() + " must be new (id = null)");
         }
     }
 
@@ -29,16 +29,16 @@ public class ValidationUtil {
         if (entity.isNew()) {
             entity.setId(id);
         } else if (entity.id() != id) {
-            throw new IllegalRequestDataException(entity.getClass().getSimpleName() + " must has id=" + id);
+            throw new IllegalRequestDataException(entity.getClass().getSimpleName() + " must has id = " + id);
         }
     }
 
     public static <T> T checkNotFoundWithId(Optional<T> optional, Integer id) {
-        return checkNotFound(optional, "Entity with id=" + id + " not found");
+        return checkNotFound(optional, "Entity with id = " + id + " not found");
     }
 
     public static <T> T checkNotFoundWithName(Optional<T> optional, String name) {
-        return checkNotFound(optional, "Entity with name=" + name + " not found");
+        return checkNotFound(optional, "Entity with name = " + name + " not found");
     }
 
     public static <T> T checkNotFound(Optional<T> optional, String msg) {

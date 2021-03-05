@@ -15,13 +15,13 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
 
     @EntityGraph(attributePaths = {"restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT m FROM Menu m LEFT JOIN FETCH m.meals WHERE m.id = :id")
-    Optional<Menu> findById(int id);
+    Optional<Menu> get(int id);
 
     @EntityGraph(attributePaths = {"restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT m FROM Menu m LEFT JOIN FETCH m.meals")
-    List<Menu> findAll();
+    List<Menu> getAll();
 
     @EntityGraph(attributePaths = {"restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT m FROM Menu m LEFT JOIN FETCH m.meals WHERE m.date=:date")
-    List<Menu> findAllByDate(LocalDate date);
+    List<Menu> getAllByDate(LocalDate date);
 }
