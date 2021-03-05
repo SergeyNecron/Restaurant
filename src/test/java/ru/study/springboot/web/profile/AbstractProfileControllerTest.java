@@ -6,7 +6,6 @@ import ru.study.springboot.model.User;
 import ru.study.springboot.web.AbstractControllerTest;
 
 import static ru.study.springboot.web.profile.AdminProfileRestController.REST_URL_PROFILE_ADMIN;
-import static ru.study.springboot.web.profile.RegisterRestController.REST_URL_REGISTER;
 import static ru.study.springboot.web.profile.UserProfileRestController.REST_URL_PROFILE_USER;
 
 public abstract class AbstractProfileControllerTest extends AbstractControllerTest {
@@ -16,7 +15,7 @@ public abstract class AbstractProfileControllerTest extends AbstractControllerTe
     }
 
     protected ResultActions getMvcResultPost(UserIn userIn) throws Exception {
-        return super.getMvcResultPost(REST_URL_REGISTER, userIn);
+        return super.getMvcResultPost(REST_URL_PROFILE_USER + "/register", userIn);
     }
 
     protected ResultActions getMvcResultPut(User user, Integer id, UserIn userIn) throws Exception {

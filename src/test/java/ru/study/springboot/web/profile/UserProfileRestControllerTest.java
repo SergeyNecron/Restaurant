@@ -2,10 +2,14 @@ package ru.study.springboot.web.profile;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import ru.study.springboot.dto.UserIn;
 import ru.study.springboot.dto.UserOut;
+import ru.study.springboot.model.Role;
 import ru.study.springboot.model.User;
 import ru.study.springboot.web.TestUtil;
+
+import java.util.EnumSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -80,5 +84,15 @@ class UserProfileRestControllerTest extends AbstractProfileControllerTest {
     @Test
     void deleteProfileUnAuthFailed() throws Exception {
         getMvcResultDelete(USER_NOT_REGISTRATION).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void register() throws Exception {
+        ResultActions action = getMvcResultPost(USER_NEW_IN);
+        action.andExpect(status().isCreated());
+        UserOut actualProfile = TestUtil.readFromJson(action, UserOut.class);
+        UserOut userOut = new UserOut(USER_NEW_IN, 3);
+        userOut.setRoles(EnumSet.of(Role.USER));
+        assertEquals(userOut, actualProfile);
     }
 }

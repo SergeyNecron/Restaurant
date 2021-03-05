@@ -8,12 +8,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.study.springboot.AuthUser;
 import ru.study.springboot.dto.UserIn;
 import ru.study.springboot.dto.UserOut;
 import ru.study.springboot.model.Role;
+import ru.study.springboot.model.User;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.Set;
 
 @RestController
@@ -24,6 +27,16 @@ import java.util.Set;
 public class UserProfileRestController extends AbstractProfileController {
 
     static final String REST_URL_PROFILE_USER = "/rest/user/profile";
+
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<UserOut> register(@Valid @RequestBody UserIn userIn) {
+        User created = create(userIn);
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(REST_URL_PROFILE_USER)
+                .build().toUri();
+        return ResponseEntity.created(uriOfNewResource).body(new UserOut(created));
+    }
 
     @GetMapping
     public ResponseEntity<UserOut> get(@AuthenticationPrincipal AuthUser authUser) {

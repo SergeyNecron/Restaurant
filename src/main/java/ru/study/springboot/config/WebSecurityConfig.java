@@ -49,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/rest/register").anonymous()
+                .antMatchers("/rest/user/profile/register").anonymous()
                 .antMatchers("/rest/admin/**").hasRole(Role.ADMIN.name())
                 .antMatchers("/rest/user/**").hasRole(Role.USER.name())
                 .and().httpBasic()
