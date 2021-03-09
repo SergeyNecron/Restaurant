@@ -25,6 +25,14 @@ public abstract class AbstractRestaurantController {
         return new RestaurantOut(restaurant, getRatingRestaurantByDateNow(restaurant));
     }
 
+    public List<RestaurantOut> getAll() {
+        log.info("get all restaurants with rating and menus");
+        return restaurantService.getAll()
+                .stream()
+                .map(it -> new RestaurantOut(it, getRatingRestaurantByDateNow(it)))
+                .collect(Collectors.toList());
+    }
+
     public List<RestaurantOut> getAll(LocalDate date) {
         log.info("get all restaurants with rating and menus by date {}", date);
         return restaurantService.getAll(date)

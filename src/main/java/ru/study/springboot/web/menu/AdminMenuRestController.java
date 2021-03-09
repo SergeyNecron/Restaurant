@@ -35,7 +35,7 @@ import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 @Slf4j
 @AllArgsConstructor
 @Api(tags = "Admin menu controller")
-@CacheConfig(cacheNames = {"restaurants", "menus", "menus-by-date"})
+@CacheConfig(cacheNames = {"restaurants", "menus", "menus-by-date", "restaurants-by-date"})
 public class AdminMenuRestController {
     static final String REST_URL_MENU_ADMIN = "/rest/admin/menu";
     static final Integer MIN_COUNT_MEALS_FOR_MENU = 2;

@@ -44,6 +44,15 @@ public class RestaurantService {
         return restaurants;
     }
 
+    @Transactional
+    public List<Restaurant> getAll() {
+        List<Restaurant> restaurants = restaurantRepository.findAll();
+        if (restaurants.size() != 0) {
+            Hibernate.initialize(restaurants.get(0).getVotes());
+        }
+        return restaurants;
+    }
+
     private void ifMenuIsPresetThenInitializeMenu(Restaurant restaurants) {
         List<Menu> menus = restaurants.getMenus();
         if (menus.size() != 0) Hibernate.initialize(menus.get(0).getMeals());

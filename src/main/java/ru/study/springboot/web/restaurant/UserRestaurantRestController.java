@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @Api(tags = "User restaurant controller")
-@CacheConfig(cacheNames = "restaurants")
+@CacheConfig(cacheNames = "restaurants-by-date")
 @RequestMapping(value = UserRestaurantRestController.REST_URL_RESTAURANT_USER)
 public class UserRestaurantRestController extends AbstractRestaurantController {
     static final String REST_URL_RESTAURANT_USER = "/rest/user/restaurant";

@@ -24,14 +24,20 @@ import static ru.study.springboot.web.restaurant.UserRestaurantRestController.RE
 
 @RestController
 @AllArgsConstructor
-@CacheConfig(cacheNames = "restaurants")
+@CacheConfig(cacheNames = {"restaurants", "restaurants-by-date"})
 @Api(tags = "Admin restaurant controller")
 @RequestMapping(value = AdminRestaurantRestController.REST_URL_RESTAURANT_ADMIN)
 public class AdminRestaurantRestController extends AbstractRestaurantController {
     static final String REST_URL_RESTAURANT_ADMIN = "/rest/admin/restaurant";
 
+    @GetMapping
+    @Cacheable(cacheNames = "restaurants")
+    public List<RestaurantOut> getAllRestaurantsWithMenu() {
+        return getAll();
+    }
+
     @GetMapping("/{date}")
-    @Cacheable
+    @Cacheable(cacheNames = "restaurants-by-date")
     public List<RestaurantOut> getAllRestaurantsWithMenuByDate(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return getAll(date);
