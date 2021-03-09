@@ -26,8 +26,10 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ru.study.springboot.util.ValidationUtil.checkNotDuplicate;
 import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 
 @RestController
@@ -72,12 +74,15 @@ public class AdminMenuRestController {
                 .map(MenuOut::new)
                 .collect(Collectors.toList());
     }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @CacheEvict(allEntries = true)
     public ResponseEntity<MenuOut> createMenuWithMeals(@Valid @RequestBody MenuIn menuIn) {
         log.info("create menu: {} for restaurant {}", menuIn.getName(), menuIn.getRestaurantId());
-        final Menu menu = buildMenu(menuIn);
+        Menu menu = buildMenu(menuIn);
+        final Optional<Menu> menuOpt = menuRepository.getMenuByDateAndNameAndRestaurant_Id(menuIn.getDate(), menuIn.getName(), menuIn.getRestaurantId());
+        checkNotDuplicate(menuOpt, "menu");
         MenuOut created = new MenuOut(menuRepository.save(menu));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL_MENU_ADMIN + "/{id}")

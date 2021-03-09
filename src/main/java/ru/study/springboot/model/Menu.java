@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "menu", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "date", "restaurant_id"}, name = "unique_menu_date_restaurant_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -67,7 +68,7 @@ public class Menu extends AbstractNamedEntity {
     @Override
     public String toString() {
         return "{" +
-                "id = " + id +
+                " id = " + id +
                 ", name= " + name +
                 ", date= " + date +
                 ", meals= " + meals +

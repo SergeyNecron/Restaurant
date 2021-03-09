@@ -24,4 +24,6 @@ public interface MenuRepository extends JpaRepository<Menu, Integer> {
     @EntityGraph(attributePaths = {"restaurant"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT m FROM Menu m LEFT JOIN FETCH m.meals WHERE m.date=:date")
     List<Menu> getAllByDate(LocalDate date);
+
+    Optional<Menu> getMenuByDateAndNameAndRestaurant_Id(LocalDate date, String name, Integer id);
 }
