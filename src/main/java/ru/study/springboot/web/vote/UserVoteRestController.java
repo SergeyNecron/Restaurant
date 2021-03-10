@@ -18,11 +18,9 @@ import ru.study.springboot.repository.RestaurantRepository;
 import ru.study.springboot.repository.VoteRepository;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Optional;
 
 import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
-import static ru.study.springboot.util.VoteUtil.checkNotDuplicate;
 import static ru.study.springboot.util.VoteUtil.checkReVote;
 
 @RestController
@@ -43,24 +41,20 @@ public class UserVoteRestController {
     }
 
     public ResponseEntity<VoteOut> saveOrUpdateOnDate(User user, int restaurantId, LocalDateTime dateTime) {
-        Optional<Vote> vote = voteRepository.getVoteByDateAndUser(dateTime.toLocalDate(), user);
+        Optional<Vote> voteOpt = voteRepository.getVoteByDateAndUser(dateTime.toLocalDate(), user);
         Restaurant restaurant = checkNotFoundWithId(restaurantRepository.findById(restaurantId), restaurantId);
-        VoteOut voteOut;
-        if (vote.isEmpty()) {
-            voteOut = new VoteOut(voteRepository.save(new Vote(dateTime.toLocalDate(), user, restaurant)));
-            log.info("create vote: date = {}, user_id = {}, restaurant_id = {}",
-                    voteOut.getDate(), voteOut.getUserId(), voteOut.getRestaurantId());
-        } else voteOut = new VoteOut(update(vote.get(), dateTime.toLocalTime(), restaurant));
-
-        return ResponseEntity.ok(voteOut);
-    }
-
-    private Vote update(Vote vote, LocalTime time, Restaurant restaurant) {
-        log.info("update vote: id = {}, date = {}, restaurant_id = {}",
-                vote.getUser(), vote.getDate(), restaurant.id());
-        checkReVote(time);
-        checkNotDuplicate(vote.getRestaurant().id(), restaurant.id());
-        vote.setRestaurant(restaurant);
-        return voteRepository.save(vote);
+        Vote vote;
+        if (voteOpt.isEmpty()) {
+            vote = new Vote(dateTime.toLocalDate(), user, restaurant);
+            log.info("create : {}", vote);
+        } else {
+            vote = voteOpt.get();
+            vote.setRestaurant(restaurant);
+            vote.setUser(user);
+            checkReVote(dateTime.toLocalTime());
+            log.info("update : {}", vote);
+        }
+        voteRepository.save(vote);
+        return ResponseEntity.ok(new VoteOut(vote, restaurantId));
     }
 }

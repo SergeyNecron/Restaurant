@@ -21,9 +21,9 @@ public class VoteOut {
     @NotNull
     private Integer restaurantId;
 
-    public VoteOut(Vote vote) {
+    public VoteOut(Vote vote, Integer id) {
         this.userId = vote.id();
         this.date = vote.getDate();
-        this.restaurantId = vote.getRestaurant().id();
+        this.restaurantId = id;
     }
 }
