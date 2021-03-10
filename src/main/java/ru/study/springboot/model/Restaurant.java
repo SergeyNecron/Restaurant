@@ -6,7 +6,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +19,9 @@ public class Restaurant extends AbstractNamedEntity {
 
     private String address;
 
-    @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "restaurant", fetch = FetchType.LAZY)
     @JsonManagedReference
-    @Valid
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Menu> menus;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")

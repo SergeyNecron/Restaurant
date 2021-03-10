@@ -43,6 +43,8 @@ public class User extends AbstractNamedEntity {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique")})
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id") //https://stackoverflow.com/a/62848296/548473
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")

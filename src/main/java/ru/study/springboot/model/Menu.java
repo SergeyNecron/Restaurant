@@ -6,11 +6,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
@@ -33,11 +32,9 @@ public class Menu extends AbstractNamedEntity {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY)
     @JsonManagedReference
-    @Fetch(FetchMode.SUBSELECT)
-    @Valid
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Meal> meals;
 
     public Menu(Integer id, String name, LocalDate date, List<Meal> meals) {
