@@ -52,7 +52,6 @@ public abstract class AbstractProfileController {
     @Transactional
     public void update(UserIn userIn, Integer id) {
         log.info("update user {} ", userIn);
-        checkNotDuplicate(userRepository.getByEmail(userIn.getEmail()), userIn.getEmail());
         User user = checkNotFoundWithId(userRepository.findById(id), id);
         updateUserFromUserDto(user, userIn);
         userRepository.save(user);
