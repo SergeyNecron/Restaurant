@@ -38,12 +38,6 @@ class UserVoteRestControllerTest extends AbstractRestaurantControllerTest {
     }
 
     @Test
-    void checkDuplicateVoteForUserAfterEndTimeException() throws Exception {
-        getMvcResultPut(USER, 1);
-        assertThrows(IllegalRequestDataException.class, () -> userVoteRestController.saveOrUpdateOnDate(USER, 1, checkTimeBefore));
-    }
-
-    @Test
     void checkReVoteForUserAfterEndTimeException() throws Exception {
         getMvcResultPut(USER, 1);
         assertThrows(IllegalRequestDataException.class, () -> userVoteRestController.saveOrUpdateOnDate(USER, 2, checkTimeAfter));

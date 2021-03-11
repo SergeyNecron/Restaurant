@@ -61,6 +61,13 @@ class AdminMenuRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void createDuplicateMenuWithMealsForAdminFailed() throws Exception {
+        getMvcResultPost(ADMIN, REST_URL_MENU_ADMIN, NEW_MENU_IN);
+        getMvcResultPost(ADMIN, REST_URL_MENU_ADMIN, NEW_MENU_IN)
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     void updateMenuWithMealsForAdmin() throws Exception {
         getMvcResultPut(ADMIN, REST_URL_MENU_ADMIN + "/" + 1, NEW_MENU_IN)
                 .andExpect(status().isNoContent());
