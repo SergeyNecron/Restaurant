@@ -32,7 +32,8 @@ public class Menu extends AbstractNamedEntity {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Meal> meals;
