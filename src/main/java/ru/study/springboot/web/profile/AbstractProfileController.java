@@ -3,6 +3,7 @@ package ru.study.springboot.web.profile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import ru.study.springboot.dto.UserIn;
 import ru.study.springboot.dto.UserOut;
@@ -34,7 +35,7 @@ public abstract class AbstractProfileController {
     public List<UserOut> getAll() {
         log.info("get all users");
         return userRepository
-                .findAll()
+                .findAll(Sort.by(Sort.Direction.ASC, "email"))
                 .stream()
                 .map(UserOut::new)
                 .collect(Collectors.toList());

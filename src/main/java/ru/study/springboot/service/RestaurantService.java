@@ -2,6 +2,7 @@ package ru.study.springboot.service;
 
 import org.hibernate.Hibernate;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.study.springboot.dto.RestaurantIn;
@@ -48,7 +49,7 @@ public class RestaurantService {
 
     @Transactional
     public List<Restaurant> getAll() {
-        List<Restaurant> restaurants = restaurantRepository.findAll();
+        List<Restaurant> restaurants = restaurantRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
         if (restaurants.size() != 0) {
             Hibernate.initialize(restaurants.get(0).getVotes());
         }

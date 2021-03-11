@@ -36,7 +36,7 @@ class UserRestaurantRestControllerTest extends AbstractRestaurantControllerTest 
                 .andExpect(status().isOk())
                 .andReturn();
         RestaurantOut restaurantsActual = TestUtil.readFromJsonMvcResult(action, RestaurantOut.class);
-        assertEquals(getTestRestaurantsTo().get(0), restaurantsActual);
+        assertEquals(new RestaurantOut(restaurant1, 0), restaurantsActual);
     }
 
     @Test
