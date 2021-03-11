@@ -1,9 +1,11 @@
 package ru.study.springboot.service;
 
 import org.hibernate.Hibernate;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.study.springboot.dto.RestaurantIn;
+import ru.study.springboot.error.NotFoundException;
 import ru.study.springboot.model.Menu;
 import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.repository.RestaurantRepository;
@@ -71,6 +73,10 @@ public class RestaurantService {
     }
 
     public void delete(int id) {
-        restaurantRepository.deleteById(id);
+        try {
+            restaurantRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("restaurant id = " + id + " not found");
+        }
     }
 }

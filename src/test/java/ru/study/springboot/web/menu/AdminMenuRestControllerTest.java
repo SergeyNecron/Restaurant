@@ -78,6 +78,15 @@ class AdminMenuRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void deleteRepeatMenuWithMealsForAdminFailed() throws Exception {
+        getMvcResultDelete(ADMIN, REST_URL_MENU_ADMIN + "/" + 1)
+                .andExpect(status().isNoContent());
+        getMvcResultDelete(ADMIN, REST_URL_MENU_ADMIN + "/" + 1)
+                .andExpect(status().isUnprocessableEntity());
+
+    }
+
+    @Test
     void getMenuWithMealsForUserFailed() throws Exception {
         getMvcResultGet(USER, REST_URL_MENU_ADMIN + "/" + 1)
                 .andExpect(status().isForbidden());

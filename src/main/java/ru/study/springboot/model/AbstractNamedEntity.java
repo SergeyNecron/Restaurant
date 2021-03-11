@@ -12,7 +12,6 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(callSuper = false)
-@ToString(callSuper = true)
 public abstract class AbstractNamedEntity extends AbstractBaseEntity {
 
     @NotBlank
@@ -23,5 +22,13 @@ public abstract class AbstractNamedEntity extends AbstractBaseEntity {
     protected AbstractNamedEntity(Integer id, String name) {
         super(id);
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                " id = " + id +
+                " name = " + name +
+                '}';
     }
 }

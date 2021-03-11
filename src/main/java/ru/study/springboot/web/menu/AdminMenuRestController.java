@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -108,7 +109,11 @@ public class AdminMenuRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMenuWithMeals(@PathVariable int id) {
         log.info("delete menu: {}", id);
-        menuRepository.deleteById(id);
+        try {
+            menuRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("restaurant id = " + id + " not found");
+        }
         log.info("Menu id = " + id + " has been deleted");
     }
 

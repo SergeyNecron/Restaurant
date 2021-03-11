@@ -2,6 +2,7 @@ package ru.study.springboot.web.profile;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.study.springboot.dto.UserIn;
 import ru.study.springboot.dto.UserOut;
@@ -63,7 +64,12 @@ public abstract class AbstractProfileController {
     public void delete(int id) {
         log.info("delete user id = {}", id);
         if (id == 1) throw new IllegalRequestDataException("must not delete admin with id = 1");
-        userRepository.deleteById(id);
+        try {
+            userRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("restaurant id = " + id + " not found");
+        }
+        log.info("Menu id = " + id + " has been deleted");
         log.info("User id = " + id + " has been deleted");
     }
 

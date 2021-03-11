@@ -116,6 +116,14 @@ class AdminRestaurantRestControllerTest extends AbstractRestaurantControllerTest
     }
 
     @Test
+    void deleteRepeatRestaurantWithMenusWithMealsForAdminFailed() throws Exception {
+        getMvcResultDelete(ADMIN, 2)
+                .andExpect(status().isNoContent());
+        getMvcResultDelete(ADMIN, 2)
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     void deleteRestaurantWithMenusWithMealsForUnAuthFailed() throws Exception {
         getMvcResultDelete(USER_NOT_REGISTRATION, 2)
                 .andExpect(status().isUnauthorized());

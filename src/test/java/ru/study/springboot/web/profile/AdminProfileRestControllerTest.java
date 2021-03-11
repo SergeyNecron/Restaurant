@@ -88,6 +88,13 @@ class AdminProfileRestControllerTest extends AbstractProfileControllerTest {
     }
 
     @Test
+    void deleteRepeatProfileAdminFailed() throws Exception {
+        getMvcResultDelete(ADMIN, 2).andExpect(status().isNoContent());
+        getMvcResultDelete(ADMIN, 2).andExpect(status().isUnprocessableEntity());
+    }
+
+
+    @Test
     void deleteProfileUserFailed() throws Exception {
         getMvcResultDelete(USER, 2)
                 .andExpect(status().isForbidden());
