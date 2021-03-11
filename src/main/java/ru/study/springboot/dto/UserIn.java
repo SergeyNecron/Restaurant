@@ -40,4 +40,14 @@ public class UserIn extends BaseIn {
 
     @Setter
     private Set<Role> roles;
+
+    @Override
+    public String toString() {
+        return "UserIn{" +
+                " name = " + email +
+                ", email = " + email +
+                ", password = " + password +
+                ", roles = " + roles +
+                '}';
+    }
 }

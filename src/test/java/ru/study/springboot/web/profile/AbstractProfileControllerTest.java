@@ -18,6 +18,10 @@ public abstract class AbstractProfileControllerTest extends AbstractControllerTe
         return super.getMvcResultPost(REST_URL_PROFILE_USER + "/register", userIn);
     }
 
+    protected ResultActions getMvcResultPost(User user, UserIn userIn) throws Exception {
+        return super.getMvcResultPost(user, REST_URL_PROFILE_ADMIN + "/create", userIn);
+    }
+
     protected ResultActions getMvcResultPut(User user, Integer id, UserIn userIn) throws Exception {
         return super.getMvcResultPut(user, REST_URL_PROFILE_ADMIN + "/" + id, userIn);
     }

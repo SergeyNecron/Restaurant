@@ -42,7 +42,6 @@ public abstract class AbstractProfileController {
 
     @Transactional
     public User create(UserIn userIn) {
-        log.info("register {}", userIn);
         checkNotDuplicate(userRepository.getByEmail(userIn.getEmail()), userIn.getEmail());
         User user = new User();
         userIn.setRoles(Set.of(Role.USER));// при создании всегда роль User

@@ -10,10 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.study.springboot.dto.UserIn;
 import ru.study.springboot.dto.UserOut;
+import ru.study.springboot.model.User;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -34,6 +37,18 @@ public class AdminProfileRestController extends AbstractProfileController {
     @Cacheable
     public List<UserOut> getAllUsers() {
         return getAll();
+    }
+
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @CacheEvict(allEntries = true)
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ResponseEntity<UserOut> createUser(@Valid @RequestBody UserIn userIn) {
+        log.info("create {}", userIn);
+        User created = create(userIn);
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(REST_URL_PROFILE_ADMIN + "/{id}")
+                .buildAndExpand(created.getId()).toUri();
+        return ResponseEntity.created(uriOfNewResource).body(new UserOut(created));
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

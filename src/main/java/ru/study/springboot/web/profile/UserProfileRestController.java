@@ -35,6 +35,7 @@ public class UserProfileRestController extends AbstractProfileController {
     @CacheEvict(allEntries = true)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<UserOut> register(@Valid @RequestBody UserIn userIn) {
+        log.info("register {}", userIn);
         User created = create(userIn);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL_PROFILE_USER)
