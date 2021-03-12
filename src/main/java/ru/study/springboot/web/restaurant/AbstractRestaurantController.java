@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.study.springboot.dto.RestaurantIn;
 import ru.study.springboot.dto.RestaurantOut;
-import ru.study.springboot.error.NotFoundException;
 import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.service.RestaurantService;
 
@@ -20,16 +19,14 @@ public abstract class AbstractRestaurantController {
 
     public RestaurantOut get(Integer id) {
         log.info("get restaurant id = {}, with rating and menus", id);
-        final Restaurant restaurant = restaurantService.get(id)
-                .orElseThrow(() -> new NotFoundException("RestaurantOut id = " + id + " not found"));
-        return new RestaurantOut(restaurant, getRatingRestaurantByDateNow(restaurant));
+        return new RestaurantOut(restaurantService.get(id));
     }
 
     public List<RestaurantOut> getAll() {
         log.info("get all restaurants with rating and menus");
         return restaurantService.getAll()
                 .stream()
-                .map(it -> new RestaurantOut(it, getRatingRestaurantByDateNow(it)))
+                .map(RestaurantOut::new)
                 .collect(Collectors.toList());
     }
 
@@ -37,7 +34,7 @@ public abstract class AbstractRestaurantController {
         log.info("get all restaurants with rating and menus by date {}", date);
         return restaurantService.getAll(date)
                 .stream()
-                .map(it -> new RestaurantOut(it, getRatingRestaurantByDateNow(it)))
+                .map(RestaurantOut::new)
                 .collect(Collectors.toList());
     }
 
@@ -56,12 +53,5 @@ public abstract class AbstractRestaurantController {
         log.info("delete {}", id);
         restaurantService.delete(id);
         log.info("Restaurant id = " + id + " has been deleted");
-    }
-
-    private int getRatingRestaurantByDateNow(Restaurant restaurant) {
-        return (int) restaurant.getVotes()
-                .stream()
-                .filter(it -> it.getDate().equals(LocalDate.now()))
-                .count();
     }
 }

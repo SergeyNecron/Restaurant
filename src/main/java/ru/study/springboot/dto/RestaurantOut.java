@@ -7,6 +7,7 @@ import lombok.ToString;
 import ru.study.springboot.model.Menu;
 import ru.study.springboot.model.Restaurant;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -19,11 +20,16 @@ public class RestaurantOut extends BaseOut {
     private Integer rating;
     private List<Menu> menus;
 
-    public RestaurantOut(Restaurant restaurant, Integer rating) {
+    public RestaurantOut(Restaurant restaurant) {
         super(restaurant.getId(), restaurant.getName());
         this.address = restaurant.getAddress();
-        this.rating = rating;
         this.menus = restaurant.getMenus();
+        this.rating = (int) restaurant
+                .getVotes()
+                .stream()
+                .filter(it -> it.getDate().equals(LocalDate.now()))
+                .count();
+
     }
 
     public RestaurantOut(Integer id, String name, String address) {

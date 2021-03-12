@@ -13,10 +13,8 @@ import ru.study.springboot.repository.RestaurantRepository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import static ru.study.springboot.util.ValidationUtil.checkNotDuplicate;
-import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
 public class RestaurantService {
@@ -28,12 +26,10 @@ public class RestaurantService {
     }
 
     @Transactional
-    public Optional<Restaurant> get(Integer id) {
-        final Optional<Restaurant> restaurant = restaurantRepository.findById(id);
-        restaurant.ifPresent(value -> {
-            ifMenuIsPresetThenInitializeMenu(value);
-            Hibernate.initialize(value.getVotes());
-        });
+    public Restaurant get(Integer id) {
+        Restaurant restaurant = restaurantRepository.getExisted(id);
+        ifMenuIsPresetThenInitializeMenu(restaurant);
+        Hibernate.initialize(restaurant.getVotes());
         return restaurant;
     }
 
@@ -67,7 +63,7 @@ public class RestaurantService {
     }
 
     public void update(RestaurantIn restaurantIn, int id) {
-        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.findById(id), id);
+        Restaurant restaurant = restaurantRepository.getExisted(id);
         restaurant.setName(restaurantIn.getName());
         restaurant.setAddress(restaurantIn.getAddress());
         restaurantRepository.save(restaurant);

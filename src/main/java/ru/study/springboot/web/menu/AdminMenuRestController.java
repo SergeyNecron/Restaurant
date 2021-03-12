@@ -31,7 +31,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.study.springboot.util.ValidationUtil.checkNotDuplicate;
-import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 
 @RestController
 @RequestMapping(value = AdminMenuRestController.REST_URL_MENU_ADMIN, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -97,7 +96,7 @@ public class AdminMenuRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateMenuWithMeals(@Valid @RequestBody MenuIn menuIn, @PathVariable Integer id) {
         log.info("update menu: {}", menuIn);
-        checkNotFoundWithId(menuRepository.findById(id), id);
+        menuRepository.getExisted(id);
         final Menu menu = buildMenu(menuIn);
         menu.setId(id);
         menuRepository.save(menu);
@@ -120,7 +119,7 @@ public class AdminMenuRestController {
     private Menu buildMenu(MenuIn menuIn) {
         final Menu menu = menuIn.toMenu();
         checkCountMealsValid(menu);
-        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.findById(menuIn.getRestaurantId()), menuIn.getRestaurantId());
+        Restaurant restaurant = restaurantRepository.getExisted(menuIn.getRestaurantId());
         menu.setRestaurant(restaurant);
         menu.getMeals().forEach(it -> it.setMenu(menu));
         return menu;

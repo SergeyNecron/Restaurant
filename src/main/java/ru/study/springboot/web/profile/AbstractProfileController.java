@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.study.springboot.util.ValidationUtil.checkNotDuplicate;
-import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 
 @Slf4j
 public abstract class AbstractProfileController {
@@ -28,8 +27,7 @@ public abstract class AbstractProfileController {
 
     public UserOut get(int id) {
         log.info("get user id = {}", id);
-        return new UserOut(userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("user id = " + id + " not found")));
+        return new UserOut(userRepository.getExisted(id));
     }
 
     public List<UserOut> getAll() {
@@ -53,7 +51,7 @@ public abstract class AbstractProfileController {
     @Transactional
     public void update(UserIn userIn, Integer id) {
         log.info("update user {} ", userIn);
-        User user = checkNotFoundWithId(userRepository.findById(id), id);
+        User user = userRepository.getExisted(id);
         updateUserFromUserDto(user, userIn);
         userRepository.save(user);
         log.info("User id = " + id + " has been update");

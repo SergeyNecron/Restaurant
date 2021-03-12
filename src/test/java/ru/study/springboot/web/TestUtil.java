@@ -38,7 +38,7 @@ public class TestUtil {
     public static List<RestaurantOut> getTestRestaurantsTo() {
         return TestData.getTestRestaurants()
                 .stream()
-                .map(it -> new RestaurantOut(it, 0))
+                .map(RestaurantOut::new)
                 .sorted(Comparator.comparing(BaseOut::getName))
                 .collect(Collectors.toList());
     }

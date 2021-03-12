@@ -20,7 +20,6 @@ import ru.study.springboot.repository.VoteRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static ru.study.springboot.util.ValidationUtil.checkNotFoundWithId;
 import static ru.study.springboot.util.VoteUtil.checkReVote;
 
 @RestController
@@ -42,7 +41,7 @@ public class UserVoteRestController {
 
     public ResponseEntity<VoteOut> saveOrUpdateOnDate(User user, int restaurantId, LocalDateTime dateTime) {
         Optional<Vote> voteOpt = voteRepository.getVoteByDateAndUser(dateTime.toLocalDate(), user);
-        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.findById(restaurantId), restaurantId);
+        Restaurant restaurant = restaurantRepository.getExisted(restaurantId);
         Vote vote;
         if (voteOpt.isEmpty()) {
             vote = new Vote(dateTime.toLocalDate(), user, restaurant);

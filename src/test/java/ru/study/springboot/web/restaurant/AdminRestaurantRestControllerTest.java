@@ -92,7 +92,7 @@ class AdminRestaurantRestControllerTest extends AbstractRestaurantControllerTest
                 getMvcResultGet(ADMIN, 1).andReturn(), RestaurantOut.class);
         Restaurant restaurant = new Restaurant(1, restaurantIn.getName(), menu1);
         restaurant.setName(restaurantIn.getName());
-        assertEquals(new RestaurantOut(restaurant, 0), restaurantsActual);
+        assertEquals(new RestaurantOut(restaurant), restaurantsActual);
     }
 
     @Test
