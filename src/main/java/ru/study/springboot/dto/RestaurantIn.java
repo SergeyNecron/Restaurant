@@ -21,6 +21,6 @@ public class RestaurantIn extends BaseIn {
     }
 
     public Restaurant toRestaurant() {
-        return new Restaurant(null, getName(), address);
+        return new Restaurant(getName(), address);
     }
 }

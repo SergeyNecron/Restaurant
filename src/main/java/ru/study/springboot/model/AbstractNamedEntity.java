@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 @MappedSuperclass
 @Getter
 @Setter
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(callSuper = false)
 public abstract class AbstractNamedEntity extends AbstractBaseEntity {
@@ -18,6 +19,10 @@ public abstract class AbstractNamedEntity extends AbstractBaseEntity {
     @Size(min = 2, max = 100)
     @Column(name = "name", nullable = false)
     protected String name;
+
+    protected AbstractNamedEntity(String name) {
+        this.name = name;
+    }
 
     protected AbstractNamedEntity(Integer id, String name) {
         super(id);

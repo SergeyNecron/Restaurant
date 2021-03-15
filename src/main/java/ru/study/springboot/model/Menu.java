@@ -44,8 +44,12 @@ public class Menu extends AbstractNamedEntity {
         this.date = date;
     }
 
+    public Menu(String name, LocalDate date, List<Meal> meals) {
+        this(null, name, date, meals);
+    }
+
     public Menu(String name, List<Meal> meals) {
-        this(null, name, LocalDate.now(), meals);
+        this(name, LocalDate.now(), meals);
     }
 
     @Override

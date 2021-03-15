@@ -20,7 +20,7 @@ import ru.study.springboot.repository.VoteRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static ru.study.springboot.util.VoteUtil.checkReVote;
+import static ru.study.springboot.util.ValidationUtil.checkReVote;
 
 @RestController
 @RequestMapping(value = UserVoteRestController.REST_URL_VOTE_USER)

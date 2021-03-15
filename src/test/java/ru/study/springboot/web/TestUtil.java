@@ -36,7 +36,7 @@ public class TestUtil {
     }
 
     public static List<RestaurantOut> getTestRestaurantsTo() {
-        return TestData.getTestRestaurants()
+        return TestData.restaurants
                 .stream()
                 .map(RestaurantOut::new)
                 .sorted(Comparator.comparing(BaseOut::getName))

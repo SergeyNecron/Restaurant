@@ -28,6 +28,6 @@ public class MenuIn extends BaseIn {
     }
 
     public Menu toMenu() {
-        return new Menu(null, getName(), date, meals);
+        return new Menu(getName(), date, meals);
     }
 }
