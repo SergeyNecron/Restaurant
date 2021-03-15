@@ -31,8 +31,6 @@ public class TestData {
     public static Restaurant restaurant2;
     public static Restaurant restaurant3;
     public static Restaurant restaurant4;
-    public static List<Menu> menus = List.of(menu1, menu2, menu3, menu4);
-    public static List<Restaurant> restaurants = List.of(restaurant1, restaurant2, restaurant3, restaurant4);
 
     static {
         final List<Meal> meals1 = List.of(
@@ -82,4 +80,7 @@ public class TestData {
         menu3.setRestaurant(restaurant3);
         menu4.setRestaurant(restaurant4);
     }
+
+    public static List<Menu> menus = List.of(menu1, menu2, menu3, menu4);
+    public static List<Restaurant> restaurants = List.of(restaurant1, restaurant2, restaurant3, restaurant4);
 }

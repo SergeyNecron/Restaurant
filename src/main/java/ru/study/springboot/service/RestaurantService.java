@@ -63,9 +63,8 @@ public class RestaurantService {
     }
 
     public void update(RestaurantIn restaurantIn, int id) {
-        Restaurant restaurant = restaurantRepository.getExisted(id);
-        restaurant.setName(restaurantIn.getName());
-        restaurant.setAddress(restaurantIn.getAddress());
+        Restaurant restaurantOld = restaurantRepository.getExisted(id);
+        Restaurant restaurant = restaurantIn.updateRestaurantFromRestaurantDto(restaurantOld);
         restaurantRepository.save(restaurant);
     }
 

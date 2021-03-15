@@ -46,12 +46,11 @@ public abstract class AbstractRestaurantController {
     public void update(RestaurantIn restaurantIn, int id) {
         log.info("update restaurant: {}", restaurantIn);
         restaurantService.update(restaurantIn, id);
-        log.info("Restaurant id = " + id + " has been update");
     }
 
     public void delete(int id) {
-        log.info("delete {}", id);
+        log.info("delete restaurant {}", id);
         restaurantService.delete(id);
-        log.info("Restaurant id = " + id + " has been deleted");
+
     }
 }

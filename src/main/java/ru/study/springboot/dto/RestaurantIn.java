@@ -23,4 +23,10 @@ public class RestaurantIn extends BaseIn {
     public Restaurant toRestaurant() {
         return new Restaurant(getName(), address);
     }
+
+    public Restaurant updateRestaurantFromRestaurantDto(Restaurant restaurant) {
+        restaurant.setName(getName());
+        restaurant.setAddress(address);
+        return restaurant;
+    }
 }

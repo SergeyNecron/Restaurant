@@ -1,6 +1,7 @@
 package ru.study.springboot.util;
 
 import lombok.experimental.UtilityClass;
+import ru.study.springboot.dto.MenuIn;
 import ru.study.springboot.error.IllegalRequestDataException;
 import ru.study.springboot.error.NotFoundException;
 
@@ -11,6 +12,15 @@ import java.util.Optional;
 public class ValidationUtil {
 
     public static final LocalTime endTime = LocalTime.of(11, 0);
+    public static final Integer MIN_COUNT_MEALS_FOR_MENU = 2;
+    public static final Integer MAX_COUNT_MEALS_FOR_MENU = 5;
+
+    public static void checkCountMealsValid(MenuIn menuIn) {
+        if (menuIn.getMeals().size() > MAX_COUNT_MEALS_FOR_MENU) throw new
+                IllegalRequestDataException("Max count meals for menu = " + MAX_COUNT_MEALS_FOR_MENU);
+        if (menuIn.getMeals().size() < MIN_COUNT_MEALS_FOR_MENU) throw new
+                IllegalRequestDataException("Min count meals for menu = " + MIN_COUNT_MEALS_FOR_MENU);
+    }
 
     public static void checkReVote(LocalTime timeReVote) {
         if (timeReVote.isAfter(endTime))

@@ -38,6 +38,19 @@ public class UserIn extends BaseIn {
         this(user.getName(), user.getEmail(), user.getPassword());
     }
 
+    public User toUser() {
+        return new User(getName(), email, password,
+                Set.of(Role.USER)); // при создании всегда роль User);
+    }
+
+    public User updateUserFromUserDto(User user) {
+        user.setName(getName());
+        user.setEmail(email);
+        user.setPassword(password);
+        if (roles != null) user.setRoles(roles);
+        return user;
+    }
+
     @Setter
     private Set<Role> roles;
 

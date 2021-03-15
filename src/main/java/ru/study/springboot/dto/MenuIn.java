@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 import ru.study.springboot.model.Meal;
 import ru.study.springboot.model.Menu;
+import ru.study.springboot.model.Restaurant;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -27,7 +28,15 @@ public class MenuIn extends BaseIn {
         this.meals = meals;
     }
 
-    public Menu toMenu() {
-        return new Menu(getName(), date, meals);
+    public Menu toMenu(Restaurant restaurant) {
+        return new Menu(getName(), date, restaurant, meals);
+    }
+
+    public Menu updateMenuFromMenuDto(Menu menu, Restaurant restaurant) {
+        menu.setName(getName());
+        menu.setDate(date);
+        menu.setRestaurant(restaurant);
+        menu.setMeals(meals);
+        return menu;
     }
 }

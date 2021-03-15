@@ -42,6 +42,15 @@ public class Menu extends AbstractNamedEntity {
         super(id, name);
         this.meals = meals;
         this.date = date;
+        meals.forEach(it -> it.setMenu(this));
+    }
+
+    public Menu(String name, LocalDate date, Restaurant restaurant, List<Meal> meals) {
+        super(null, name);
+        this.restaurant = restaurant;
+        this.meals = meals;
+        this.date = date;
+        meals.forEach(it -> it.setMenu(this));
     }
 
     public Menu(String name, LocalDate date, List<Meal> meals) {
@@ -50,6 +59,12 @@ public class Menu extends AbstractNamedEntity {
 
     public Menu(String name, List<Meal> meals) {
         this(name, LocalDate.now(), meals);
+    }
+
+    public void setMeals(List<Meal> meals) {
+        this.meals.clear();
+        this.meals.addAll(meals);
+        meals.forEach(it -> it.setMenu(this));
     }
 
     @Override
