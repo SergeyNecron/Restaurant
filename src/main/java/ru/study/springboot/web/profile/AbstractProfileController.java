@@ -2,12 +2,10 @@ package ru.study.springboot.web.profile;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import ru.study.springboot.dto.UserIn;
 import ru.study.springboot.dto.UserOut;
 import ru.study.springboot.error.IllegalRequestDataException;
-import ru.study.springboot.error.NotFoundException;
 import ru.study.springboot.model.User;
 import ru.study.springboot.repository.UserRepository;
 
@@ -51,10 +49,6 @@ public abstract class AbstractProfileController {
     public void delete(int id) {
         log.info("delete user id = {}", id);
         if (id == 1) throw new IllegalRequestDataException("must not delete admin with id = 1");
-        try {
-            userRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException("restaurant id = " + id + " not found");
-        }
+        userRepository.deleteById(id);
     }
 }

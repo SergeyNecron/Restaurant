@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.study.springboot.dto.MenuIn;
 import ru.study.springboot.dto.MenuOut;
-import ru.study.springboot.error.NotFoundException;
 import ru.study.springboot.model.Menu;
 import ru.study.springboot.model.Restaurant;
 import ru.study.springboot.repository.MenuRepository;
@@ -28,8 +26,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.study.springboot.util.ValidationUtil.checkCountMealsValid;
-import static ru.study.springboot.util.ValidationUtil.checkNotDuplicate;
+import static ru.study.springboot.util.ValidationUtil.*;
 
 @RestController
 @RequestMapping(value = AdminMenuRestController.REST_URL_MENU_ADMIN, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -46,8 +43,7 @@ public class AdminMenuRestController {
     @GetMapping("/{id}")
     public ResponseEntity<MenuOut> getMenuWithMeals(@PathVariable int id) {
         log.info("get menu {}", id);
-        return ResponseEntity.ok(new MenuOut(menuRepository.get(id)
-                .orElseThrow(() -> new NotFoundException("restaurant id = " + id + " not found"))));
+        return ResponseEntity.ok(new MenuOut(checkNotFoundWithId(menuRepository.get(id), id)));
     }
 
     @GetMapping
@@ -106,11 +102,7 @@ public class AdminMenuRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMenuWithMeals(@PathVariable int id) {
         log.info("delete menu: {}", id);
-        try {
-            menuRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException("restaurant id = " + id + " not found");
-        }
+        menuRepository.deleteById(id);
     }
 
 }

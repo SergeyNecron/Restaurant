@@ -3,6 +3,7 @@ package ru.study.springboot.web.error;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +16,15 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.study.springboot.error.AppException;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @AllArgsConstructor
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-    public static final String EXCEPTION_DUPLICATE_EMAIL = "User with this email already exists";
 
     private final ErrorAttributes errorAttributes;
 
@@ -60,5 +63,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         body.put("status", status.value());
         body.put("error", status.getReasonPhrase());
         return (ResponseEntity<T>) ResponseEntity.status(status).body(body);
+    }
+
+    @ExceptionHandler({NoSuchElementException.class, EmptyResultDataAccessException.class})
+    public ResponseEntity<?> handleEmptyResultDataAccessException(RuntimeException ex) {
+        Map<String, Object> body = new HashMap();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.UNPROCESSABLE_ENTITY.value());
+        body.put("error", HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase());
+        body.put("message", ex.getMessage());
+        return ResponseEntity.unprocessableEntity().body(body);
     }
 }

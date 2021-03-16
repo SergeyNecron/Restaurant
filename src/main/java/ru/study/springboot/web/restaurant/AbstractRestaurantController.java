@@ -51,6 +51,5 @@ public abstract class AbstractRestaurantController {
     public void delete(int id) {
         log.info("delete restaurant {}", id);
         restaurantService.delete(id);
-
     }
 }
