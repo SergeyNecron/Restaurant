@@ -33,10 +33,6 @@ public class MenuIn extends BaseIn {
     }
 
     public Menu updateMenuFromMenuDto(Menu menu, Restaurant restaurant) {
-        menu.setName(getName());
-        menu.setDate(date);
-        menu.setRestaurant(restaurant);
-        menu.setMeals(meals);
-        return menu;
+        return new Menu(menu.id(), getName(), date, restaurant, meals);
     }
 }

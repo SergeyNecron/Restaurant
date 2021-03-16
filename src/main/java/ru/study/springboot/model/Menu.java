@@ -46,12 +46,17 @@ public class Menu extends AbstractNamedEntity {
     }
 
     public Menu(String name, LocalDate date, Restaurant restaurant, List<Meal> meals) {
-        super(null, name);
+        this(null, name, date, restaurant, meals);
+    }
+
+    public Menu(Integer id, String name, LocalDate date, Restaurant restaurant, List<Meal> meals) {
+        super(id, name);
         this.restaurant = restaurant;
         this.meals = meals;
         this.date = date;
         meals.forEach(it -> it.setMenu(this));
     }
+
 
     public Menu(String name, LocalDate date, List<Meal> meals) {
         this(null, name, date, meals);

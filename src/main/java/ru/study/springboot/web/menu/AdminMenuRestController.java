@@ -79,7 +79,6 @@ public class AdminMenuRestController {
         log.info("create menu: {} for restaurant {}", menuIn.getName(), menuIn.getRestaurantId());
         checkCountMealsValid(menuIn);
         checkNotDuplicate(menuRepository.getMenuByDateAndNameAndRestaurant_Id(menuIn.getDate(), menuIn.getName(), menuIn.getRestaurantId()), "menu");
-
         Restaurant restaurant = restaurantRepository.getExisted(menuIn.getRestaurantId());
         final Menu menu = menuIn.toMenu(restaurant);
         MenuOut created = new MenuOut(menuRepository.save(menu));
