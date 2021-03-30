@@ -66,12 +66,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({NoSuchElementException.class, EmptyResultDataAccessException.class})
-    public ResponseEntity<?> handleEmptyResultDataAccessException(RuntimeException ex) {
+    public <T> ResponseEntity<T> handleEmptyResultDataAccessException(RuntimeException ex) {
         Map<String, Object> body = new HashMap();
         body.put("timestamp", LocalDateTime.now());
-        body.put("status", HttpStatus.UNPROCESSABLE_ENTITY.value());
-        body.put("error", HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase());
         body.put("message", ex.getMessage());
-        return ResponseEntity.unprocessableEntity().body(body);
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        return createResponseEntity(body, status);
     }
 }

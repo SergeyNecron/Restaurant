@@ -34,18 +34,22 @@ public class UserIn extends BaseIn {
         this.password = password;
     }
 
+    public String getEmail() {
+        return email.toLowerCase();
+    }
+
     public UserIn(User user) {
         this(user.getName(), user.getEmail(), user.getPassword());
     }
 
     public User toUser() {
-        return new User(getName(), email, password,
+        return new User(getName(), email.toLowerCase(), password,
                 Set.of(Role.USER)); // при создании всегда роль User);
     }
 
     public User updateUserFromUserDto(User user) {
         user.setName(getName());
-        user.setEmail(email);
+        user.setEmail(email.toLowerCase());
         user.setPassword(password);
         if (roles != null) user.setRoles(roles);
         return user;
