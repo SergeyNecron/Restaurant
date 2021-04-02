@@ -2,10 +2,7 @@ package ru.study.springboot.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -13,12 +10,12 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "menu", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "date", "restaurant_id"}, name = "unique_menu_date_restaurant_idx")})
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true, exclude = "restaurant")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Menu extends AbstractNamedEntity {
 
@@ -70,21 +67,6 @@ public class Menu extends AbstractNamedEntity {
         this.meals.clear();
         this.meals.addAll(meals);
         meals.forEach(it -> it.setMenu(this));
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Menu)) return false;
-        if (!super.equals(o)) return false;
-        Menu menu = (Menu) o;
-        return Objects.equals(getDate(), menu.getDate()) &&
-                Objects.equals(getMeals(), menu.getMeals());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), getDate(), getMeals());
     }
 
     @Override

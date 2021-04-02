@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
 @MappedSuperclass
 @Getter
 @Setter
-
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(callSuper = false)
 public abstract class AbstractNamedEntity extends AbstractBaseEntity {
